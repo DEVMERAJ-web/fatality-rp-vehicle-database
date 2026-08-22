@@ -1,191 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fatality Roleplay 2.0 — Vehicle Catalogue</title>
-<style>
-:root{--bg:#090b10;--card:#11151d;--card2:#171c25;--text:#f4f6f8;--muted:#9ba5b4;--accent:#e31b23;--line:#252c38;--ok:#35d07f;--warn:#f4b942}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#07090d,#10141c 55%,#080a0f);color:var(--text);font-family:Inter,Arial,sans-serif}
-header{padding:55px 7%;background:radial-gradient(circle at 80% 20%,rgba(227,27,35,.25),transparent 35%),linear-gradient(120deg,#0b0d12,#151a23);border-bottom:1px solid var(--line)}
-h1{font-size:clamp(32px,5vw,64px);margin:0 0 10px;font-weight:900;letter-spacing:-2px}header p{color:var(--muted);font-size:17px;max-width:760px}
-.container{width:min(1400px,92%);margin:30px auto}
-.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-input,select{background:var(--card);border:1px solid var(--line);color:var(--text);padding:13px 15px;border-radius:10px;font-size:15px;outline:none}
-input{flex:1;min-width:260px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.stat{background:var(--card);border:1px solid var(--line);padding:10px 14px;border-radius:9px;color:var(--muted)}.stat b{color:#fff}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
-.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:.2s;box-shadow:0 8px 30px rgba(0,0,0,.18)}
-.card:hover{transform:translateY(-4px);border-color:#454e5e}
-.photo{height:180px;background:#0b0e13;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.photo img{width:100%;height:100%;object-fit:cover}.fallback{font-size:42px;opacity:.25}
-.info{padding:17px}.code{font-family:Consolas,monospace;color:#ff5a60;font-size:14px;font-weight:700}.name{font-size:21px;font-weight:800;margin:7px 0}.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.meta div{background:#0d1118;border-radius:8px;padding:8px;font-size:12px;color:var(--muted)}.meta strong{display:block;color:#fff;font-size:13px;margin-top:2px}.badge{display:inline-block;margin-top:12px;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:800}.confirmed{background:rgba(53,208,127,.12);color:var(--ok)}.likely{background:rgba(244,185,66,.12);color:var(--warn)}.unknown{background:rgba(255,255,255,.08);color:#c4cad3}
-footer{text-align:center;color:var(--muted);padding:45px 20px}
-@media(max-width:600px){.container{width:94%}.photo{height:160px}}
-.vehicle-legend{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 8px}.vehicle-legend span,.vehicle-subtitle{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:9px 12px;border-radius:10px}.vehicle-subtitle{line-height:1.8;margin-bottom:16px;font-size:.92rem}
-.watermark{position:fixed;bottom:12px;right:15px;font-size:11px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.45);background:rgba(0,0,0,.6);padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);pointer-events:none;z-index:9999}
-.sub-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(9,11,16,.96);backdrop-filter:blur(8px);display:flex;justify-content:center;align-items:center;z-index:10000}.sub-modal{background:var(--card);border:1px solid var(--line);padding:35px 25px;border-radius:16px;text-align:center;max-width:420px;width:90%;box-shadow:0 10px 40px rgba(0,0,0,.8)}.sub-modal h2{margin:0 0 10px;font-size:24px;color:#fff}.sub-modal p{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:22px}.sub-btn{display:inline-block;background:var(--accent);color:#fff;font-weight:800;padding:13px 25px;border-radius:8px;text-decoration:none;font-size:15px;transition:.2s ease;cursor:pointer;border:none}.sub-btn:hover{opacity:.9;transform:scale(1.03)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fatality Roleplay 2.0 Vehicle Database">
+  <title>Fatality Roleplay 2.0 - Vehicle Database</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    .subscribe-gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);padding:20px}.subscribe-box{width:min(440px,100%);background:#16181C;border:1px solid #00C2FF;border-radius:12px;padding:30px;text-align:center;box-shadow:0 0 35px rgba(0,194,255,.25)}.subscribe-box h2{margin:0 0 10px;color:#fff}.subscribe-box p{margin:0 0 22px;color:#94A3B8;line-height:1.6}.subscribe-btn{width:100%;border:0;border-radius:7px;padding:13px 18px;background:#00C2FF;color:#000;font-weight:800;cursor:pointer;transition:.2s}.subscribe-btn:hover{box-shadow:0 0 18px rgba(0,194,255,.45);transform:translateY(-1px)}.made-by{position:fixed;right:14px;bottom:10px;z-index:9998;font-size:11px;letter-spacing:1px;color:#00C2FF;opacity:.65;pointer-events:none}
+  </style>
 </head>
 <body>
-<div id="subGate" class="sub-overlay"><div class="sub-modal"><h2>Subscribe to Unlock</h2><p>Please subscribe to Meraj's YouTube channel to access the Fatality Roleplay 2.0 Vehicle Catalogue.</p><button id="subBtn" class="sub-btn">▶ Subscribe Channel & Continue</button></div></div>
-<header><h1>FATALITY ROLEPLAY 2.0</h1><p>Complete server-wide vehicle catalogue — every vehicle code from the supplied server list, with identification, brand, model year, category, department and reference photography.</p></header>
-<div class="container">
-  <div class="controls">
-    <input id="search" placeholder="Search vehicle name, brand or spawn code..." autocomplete="off">
-    <select id="vehicleType"><option value="">🚘 ALL VEHICLE TYPES</option><option value="Car">🚗 CARS</option><option value="Motorcycle">🏍️ MOTORCYCLES</option><option value="Boat">🛥️ BOATS</option><option value="Helicopter">🚁 HELICOPTERS</option><option value="Plane">✈️ PLANES</option><option value="Utility">🚚 UTILITY / SPECIAL</option></select>
-    <select id="subtype"><option value="">🏷️ ALL SUBTYPES</option></select>
-    <select id="department"><option value="">ALL</option><option value="CIVILIAN">CIVILIAN</option><option value="EMS">EMS</option><option value="POLICE">POLICE</option><option value="GOVERNMENT">GOVERNMENT</option><option value="SPECIAL">SPECIAL</option></select>
-    <select id="category"><option value="">All categories</option></select>
-    <select id="status"><option value="">All confidence levels</option><option value="confirmed">Confirmed</option><option value="likely">Likely / Custom</option><option value="unknown">Unknown</option></select>
+  <div id="subscribe-gate" class="subscribe-gate">
+    <div class="subscribe-box">
+      <h2>Subscribe to Meraj</h2>
+      <p>Subscribe to Meraj's YouTube channel to continue to the Fatality Roleplay 2.0 Vehicle Database.</p>
+      <button id="subscribe-btn" class="subscribe-btn">▶ Subscribe &amp; Continue</button>
+    </div>
   </div>
-  <div class="stats"><div class="stat">Vehicles: <b id="count">0</b></div><div class="stat">Confirmed: <b id="confirmed">0</b></div><div class="stat">Likely: <b id="likely">0</b></div><div class="stat">Unknown: <b id="unknown">0</b></div></div>
-  <div id="grid" class="grid"></div>
-</div>
-<footer>Fatality Roleplay 2.0 • Server Vehicle Catalogue • Source: uploaded server vehicle-code list • Reference photos may differ from the exact FiveM model.</footer>
-<div class="watermark">MADE BY MERAJ</div>
-<script>
-const gate=document.getElementById('subGate');
-document.getElementById('subBtn').addEventListener('click',()=>{window.open('https://www.youtube.com/@op_meraj_ff?sub_confirmation=1','_blank','noopener,noreferrer');gate.style.display='none';});
 
-const typeIcons={Car:'🚗',Motorcycle:'🏍️',Boat:'🛥️',Helicopter:'🚁',Plane:'✈️',Utility:'🚚'};
-const categoryAliases={
-  sedan:['sedan','saloon','limousine','luxury sedan','sports sedan','electric sedan','maybach','s-class','s500','s63','m3','m5','m7','e55','e63','giulia','passat','w140','w222','model 3','model s'],
-  suv:['suv','urus','cayenne','gv80','x5','x6','x7','g63','g65','g900','velar','range rover','bentayga','defender','trackhawk','tundra','amarok','q8','rsq8','xc90'],
-  coupe:['coupe','911','gt2','gt3','m4','m6','brz','370z','240sx','supra','rx7','silvia','skyline','wraith'],
-  hatchback:['hatchback','hot hatch','golf','civic','polo','veloster','fk8','a45'],
-  wagon:['wagon','avant','touring','estate','rs6'],
-  supercar:['supercar','ferrari','lamborghini','mclaren','r8','nsx','f40','812','performante','huracan','aventador','ford gt'],
-  hypercar:['hypercar','chiron','jesko','senna','fenyr','gemera','fxx','sf90','sian','zentenario','amg one','terzo','p1 gtr'],
-  electric:['electric','tesla','taycan','polestar','e-tron','model 3','model s','model x','roadster','mach-e'],
-  muscle:['muscle','mustang','camaro','challenger','charger','boss429','mach 1','hellcat','zl1','gto'],
-  pickup:['pickup','tundra','ram','f150','silverado','trx','6x6'],
-  van:['van','sprinter','prison van'],
-  motorcycle:['motorcycle','bike','ninja','yamaha','zx6','zx10','r1','r6','r7','s1000','cb650','aerox','ducati','harley'],
-  police:['police','pd','pol ','sw_','bearcat','sheriff'],
-  ems:['ems','ambulance','medical','rescue'],
-  government:['government','gov','prison'],
-  drag:['drag','racing','race','race / track','drag / race'],
-  classic:['classic','vintage','old','e39','e36','e46','e92','w140','1965','1966','monte'],
-  luxury:['luxury','maybach','rolls-royce','bentley','phantom','ghost','wraith']
-};
-const categoryLabels=['Sedan','SUV','Coupe','Hatchback','Wagon','Supercar','Hypercar','Electric','Muscle','Pickup','Van','Motorcycle','Police','EMS','Government','Drag Racing','Classic / Vintage','Luxury','Sports Car','Modified','Emergency','Special / Custom'];
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand-logo">
+        <span class="brand-title">FATALITY <span class="accent-text">2.0</span></span>
+        <span class="brand-subtitle">VEHICLE DATABASE</span>
+      </div>
+      <div class="watermark-badge">MADE BY MERAJ</div>
+    </div>
+  </header>
 
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-const norm=s=>String(s??'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+  <main class="main-layout">
+    <aside class="filter-panel" aria-label="Vehicle Filters">
+      <div class="filter-header">
+        <h2>Filters</h2>
+        <button id="reset-filters-btn" class="btn-secondary" title="Reset all active filters">Reset All</button>
+      </div>
+      <div class="filter-group">
+        <label for="search-input">Search Database</label>
+        <input type="text" id="search-input" placeholder="Search by code, name, brand, etc..." autocomplete="off">
+      </div>
+      <div class="filter-group">
+        <label for="access-filter">Access Level</label>
+        <select id="access-filter"><option value="ALL">ALL</option><option value="CIVILIAN">CIVILIAN</option><option value="EMS">EMS</option><option value="POLICE">POLICE</option><option value="GOVERNMENT">GOVERNMENT</option><option value="ADMIN">ADMIN</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="type-filter">Vehicle Type</label>
+        <select id="type-filter"><option value="ALL">All Types</option><option value="Car">🚗 Car</option><option value="Motorcycle">🏍️ Motorcycle</option><option value="Boat">🛥️ Boat</option><option value="Helicopter">🚁 Helicopter</option><option value="Plane">✈️ Plane</option><option value="Utility">🚚 Utility</option></select>
+      </div>
+      <div class="filter-group"><label for="subtype-filter">Subtype</label><select id="subtype-filter"><option value="ALL">All Subtypes</option></select></div>
+      <div class="filter-group"><label for="category-filter">Category</label><select id="category-filter"><option value="ALL">All Categories</option></select></div>
+      <div class="filter-group"><label for="department-filter">Department</label><select id="department-filter"><option value="ALL">All Departments</option></select></div>
+      <div class="filter-group"><label for="status-filter">Status</label><select id="status-filter"><option value="ALL">All Statuses</option></select></div>
+      <div class="filter-group checkbox-group"><label for="favorites-toggle" class="checkbox-label"><input type="checkbox" id="favorites-toggle"> Show Favorites Only</label></div>
+    </aside>
 
-function semanticText(v){
-  return norm([v.code,v.name,v.brand,v.year,v.vehicleType,v.subtype,v.department,v.access,v.status].join(' '));
-}
-function hasAlias(v,key){
-  const text=semanticText(v);
-  return (categoryAliases[key]||[]).some(a=>text.includes(norm(a)));
-}
-function categoryMatch(v,selected){
-  if(!selected) return true;
-  const key=norm(selected);
-  if(key==='sedan') return hasAlias(v,'sedan');
-  if(key==='suv') return hasAlias(v,'suv');
-  if(key==='coupe') return hasAlias(v,'coupe');
-  if(key==='hatchback') return hasAlias(v,'hatchback');
-  if(key==='wagon') return hasAlias(v,'wagon');
-  if(key==='supercar') return hasAlias(v,'supercar');
-  if(key==='hypercar') return hasAlias(v,'hypercar');
-  if(key==='electric') return hasAlias(v,'electric');
-  if(key==='muscle') return hasAlias(v,'muscle');
-  if(key==='pickup') return hasAlias(v,'pickup');
-  if(key==='van') return hasAlias(v,'van');
-  if(key==='motorcycle') return v.vehicleType==='Motorcycle'||hasAlias(v,'motorcycle');
-  if(key==='police') return hasAlias(v,'police')||String(v.department).toUpperCase()==='POLICE'||String(v.access).toUpperCase()==='POLICE';
-  if(key==='ems') return hasAlias(v,'ems')||String(v.department).toUpperCase()==='EMS'||String(v.access).toUpperCase()==='EMS';
-  if(key==='government') return hasAlias(v,'government')||String(v.department).toUpperCase()==='GOVERNMENT'||String(v.access).toUpperCase()==='GOVERNMENT';
-  if(key==='drag racing') return hasAlias(v,'drag');
-  if(key==='classic vintage') return hasAlias(v,'classic');
-  if(key==='luxury') return hasAlias(v,'luxury');
-  if(key==='sports car') return norm(v.category).includes('sports car')||hasAlias(v,'supercar')||hasAlias(v,'coupe');
-  if(key==='modified') return norm(v.category).includes('modified')||norm(v.subtype).includes('modified');
-  if(key==='emergency') return hasAlias(v,'ems')||hasAlias(v,'police');
-  if(key==='special custom') return norm(v.subtype).includes('special')||String(v.department).toUpperCase()==='SPECIAL';
-  const hay=semanticText(v);
-  return hay.includes(key);
-}
-function subtypeMatch(v,selected){
-  if(!selected) return true;
-  const a=norm(selected), b=norm(v.subtype), c=norm(v.category), n=norm(v.name);
-  return b.includes(a)||c.includes(a)||n.includes(a)||a.includes(b)&&b.length>2;
-}
+    <section class="content-area">
+      <div class="metrics-bar"><span id="results-count">Loading Fatality database...</span></div>
+      <div id="vehicle-grid" class="vehicle-grid" aria-live="polite"></div>
+    </section>
+  </main>
 
-let vehicles=[];
-let currentResults=[];
+  <div id="vehicle-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-card"><button id="modal-close" class="modal-close-btn" aria-label="Close Modal">&times;</button><div id="modal-body"></div></div>
+  </div>
 
-function populateFilters(){
-  const sub=document.getElementById('subtype');
-  const cat=document.getElementById('category');
-  const currentType=document.getElementById('vehicleType').value;
-  const pool=currentType?vehicles.filter(v=>String(v.vehicleType).toLowerCase()===currentType.toLowerCase()):vehicles;
-  const subtypeValues=[...new Set(pool.map(v=>v.subtype).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-  sub.innerHTML='<option value="">🏷️ ALL SUBTYPES</option>'+subtypeValues.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
-  cat.innerHTML='<option value="">All categories</option>'+categoryLabels.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
-}
+  <footer class="footer"><p>Fatality Roleplay 2.0 &copy; Vehicle Database | <span class="accent-text">MADE BY MERAJ</span></p></footer>
+  <div class="made-by">MADE BY MERAJ</div>
 
-function scoreSearch(v,q){
-  if(!q) return 0;
-  const code=norm(v.code), name=norm(v.name), brand=norm(v.brand), details=semanticText(v);
-  let s=0;
-  if(code===q) s+=1000;
-  if(name===q) s+=950;
-  if(brand===q) s+=900;
-  if(code.startsWith(q)) s+=500;
-  if(name.startsWith(q)) s+=450;
-  if(brand.startsWith(q)) s+=400;
-  if(name.includes(q)) s+=250;
-  if(brand.includes(q)) s+=220;
-  if(details.includes(q)) s+=100;
-  return s;
-}
-
-function render(){
-  const q=norm(document.getElementById('search').value);
-  const department=document.getElementById('department').value.trim().toUpperCase();
-  const category=document.getElementById('category').value.trim();
-  const status=document.getElementById('status').value.trim().toLowerCase();
-  const vehicleType=document.getElementById('vehicleType').value.trim();
-  const subtype=document.getElementById('subtype').value.trim();
-
-  currentResults=vehicles.filter(v=>{
-    const searchOk=!q||semanticText(v).includes(q);
-    const deptText=semanticText(v);
-    const deptOk=!department||String(v.department).trim().toUpperCase()===department||String(v.access).trim().toUpperCase()===department||deptText.includes(norm(department));
-    const typeOk=!vehicleType||String(v.vehicleType).toLowerCase()===vehicleType.toLowerCase();
-    const statusOk=!status||String(v.status).toLowerCase()===status;
-    const subOk=subtypeMatch(v,subtype);
-    const categoryOk=categoryMatch(v,category);
-    return searchOk&&deptOk&&typeOk&&statusOk&&subOk&&categoryOk;
-  }).sort((a,b)=>scoreSearch(b,q)-scoreSearch(a,q));
-
-  const grid=document.getElementById('grid');
-  if(currentResults.length===0){
-    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#9ba5b4"><div style="font-size:42px">🔎</div><h2 style="color:#fff">No exact matches</h2><p>Try a broader search or category. The database searches name, brand, code, subtype, category, department and access.</p></div>';
-  }else{
-    grid.innerHTML=currentResults.map(v=>{
-      const icon=typeIcons[v.vehicleType]||'🚘';
-      const status=String(v.status||'unknown').toLowerCase();
-      const img=String(v.image||'').trim();
-      return `<article class="card"><div class="photo">${img?`<img loading="lazy" src="${esc(img)}" alt="${esc(v.name)}" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=&quot;fallback&quot;>${icon}</span>'">`:`<span class="fallback">${icon}</span>`}</div><div class="info"><div class="code">${esc(v.code)}</div><div class="name">${icon} ${esc(v.name)}</div><div class="meta"><div>Brand<strong>${esc(v.brand)}</strong></div><div>Year<strong>${esc(v.year)}</strong></div><div>Vehicle Type<strong>${icon} ${esc(v.vehicleType)}</strong></div><div>Type<strong>${esc(v.subtype)}</strong></div><div>Category<strong>${esc(v.category)}</strong></div><div>Department<strong>${esc(v.department)}</strong></div></div><span class="badge ${esc(status)}">${status==='confirmed'?'✓ CONFIRMED':status==='likely'?'⚠ LIKELY / CUSTOM':'? NEEDS VERIFICATION'}</span></div></article>`;
-    }).join('');
-  }
-  document.getElementById('count').textContent=currentResults.length;
-  document.getElementById('confirmed').textContent=currentResults.filter(v=>String(v.status).toLowerCase()==='confirmed').length;
-  document.getElementById('likely').textContent=currentResults.filter(v=>String(v.status).toLowerCase()==='likely').length;
-  document.getElementById('unknown').textContent=currentResults.filter(v=>String(v.status).toLowerCase()==='unknown').length;
-}
-
-fetch('./data/vehicles.json')
-  .then(r=>{if(!r.ok) throw new Error('HTTP '+r.status);return r.json();})
-  .then(data=>{vehicles=Array.isArray(data)?data:[];populateFilters();render();})
-  .catch(err=>{console.error(err);document.getElementById('grid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#f4b942"><h2>Database load failed</h2><p>Could not load data/vehicles.json.</p></div>';});
-
-['search','department','category','status','subtype'].forEach(id=>document.getElementById(id).addEventListener(id==='search'?'input':'change',render));
-document.getElementById('vehicleType').addEventListener('change',()=>{const currentSubtype='';populateFilters();document.getElementById('subtype').value=currentSubtype;render();});
-</script>
+  <script src="./js/app.js"></script>
+  <script>
+    document.getElementById('subscribe-btn').addEventListener('click',function(){window.open('https://www.youtube.com/@op_meraj_ff?sub_confirmation=1','_blank','noopener,noreferrer');document.getElementById('subscribe-gate').style.display='none';});
+  </script>
 </body>
 </html>
