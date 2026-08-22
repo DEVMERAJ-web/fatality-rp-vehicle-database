@@ -28,6 +28,8 @@
     'c8': 'https://fivemdealership.net/cdn/shop/files/image_2023-05-01_160735043.png?v=1682975264&width=1445',
     'c8p1': 'https://fivemdealership.net/cdn/shop/files/image_2023-05-01_160735043.png?v=1682975264&width=1445',
     'DLM5EMS': 'https://fivemgg.nyc3.digitaloceanspaces.com/fivem/2024/05/10084149/BMW-M5-Emergency-Services-FiveM-3.webp',
+    'DLM7EMS': 'https://digitiallatvia.com/cdn/shop/files/3_98cd40f6-80e3-448b-b2a8-a0845ae46a38.jpg?v=1704638953&width=2048',
+    'M7EMS': 'https://digitiallatvia.com/cdn/shop/files/3_98cd40f6-80e3-448b-b2a8-a0845ae46a38.jpg?v=1704638953&width=2048',
     'DLRS6EMS': 'https://dunb17ur4ymx4.cloudfront.net/packages/images/c52ef023eacb2bf8ad027d17501698e0f3fac553.png',
     'DLRS7EMS': 'https://static.wixstatic.com/media/433ec0_d8e54d3364654f52a33392b77c6eebe8~mv2.png/v1/fill/w_980%2Ch_495%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/433ec0_d8e54d3364654f52a33392b77c6eebe8~mv2.png',
     'DLRSQ8EMS': 'https://fivemdealership.net/cdn/shop/files/GTA5_2024-03-17_06-32-16.png?v=1711560941&width=1100',
