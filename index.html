@@ -1,270 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fatality Roleplay 2.0 — Vehicle Catalogue</title>
-<style>
-:root{--bg:#090b10;--card:#11151d;--card2:#171c25;--text:#f4f6f8;--muted:#9ba5b4;--accent:#e31b23;--line:#252c38;--ok:#35d07f;--warn:#f4b942}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#07090d,#10141c 55%,#080a0f);color:var(--text);font-family:Inter,Arial,sans-serif}
-header{padding:55px 7%;background:radial-gradient(circle at 80% 20%,rgba(227,27,35,.25),transparent 35%),linear-gradient(120deg,#0b0d12,#151a23);border-bottom:1px solid var(--line)}
-h1{font-size:clamp(32px,5vw,64px);margin:0 0 10px;font-weight:900;letter-spacing:-2px}header p{color:var(--muted);font-size:17px;max-width:760px}
-.container{width:min(1400px,92%);margin:30px auto}
-.controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-input,select{background:var(--card);border:1px solid var(--line);color:var(--text);padding:13px 15px;border-radius:10px;font-size:15px;outline:none}
-input{flex:1;min-width:260px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.stat{background:var(--card);border:1px solid var(--line);padding:10px 14px;border-radius:9px;color:var(--muted)}.stat b{color:#fff}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
-.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:.2s;box-shadow:0 8px 30px rgba(0,0,0,.18)}
-.card:hover{transform:translateY(-4px);border-color:#454e5e}
-.photo{height:180px;background:#0b0e13;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.photo img{width:100%;height:100%;object-fit:cover}.fallback{font-size:42px;opacity:.25}
-.info{padding:17px}.code{font-family:Consolas,monospace;color:#ff5a60;font-size:14px;font-weight:700}.name{font-size:21px;font-weight:800;margin:7px 0}.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.meta div{background:#0d1118;border-radius:8px;padding:8px;font-size:12px;color:var(--muted)}.meta strong{display:block;color:#fff;font-size:13px;margin-top:2px}.badge{display:inline-block;margin-top:12px;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:800}.confirmed{background:rgba(53,208,127,.12);color:var(--ok)}.likely{background:rgba(244,185,66,.12);color:var(--warn)}.unknown{background:rgba(255,255,255,.08);color:#c4cad3}
-footer{text-align:center;color:var(--muted);padding:45px 20px}
-@media(max-width:600px){.container{width:94%}.photo{height:160px}}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fatality Roleplay 2.0 Vehicle Database">
+  <title>Fatality Roleplay 2.0 - Vehicle Database</title>
 
-/* Subtitle and Legend Styling */
-.vehicle-legend{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 8px}
-.vehicle-legend span,.vehicle-subtitle{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:9px 12px;border-radius:10px}
-.vehicle-subtitle{line-height:1.8;margin-bottom:16px;font-size:.92rem}
+  <link rel="stylesheet" href="./css/style.css">
 
-/* Small Watermark at Bottom Right */
-.watermark {
-  position: fixed;
-  bottom: 12px;
-  right: 15px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.45);
-  background: rgba(0, 0, 0, 0.6);
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  pointer-events: none;
-  z-index: 9999;
-}
+  <style>
+    .subscribe-gate{
+      position:fixed;
+      inset:0;
+      z-index:99999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,.92);
+      backdrop-filter:blur(8px);
+      padding:20px;
+    }
 
-/* Subscribe Gate Overlay */
-.sub-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(9, 11, 16, 0.96);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-}
-.sub-modal {
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 35px 25px;
-  border-radius: 16px;
-  text-align: center;
-  max-width: 420px;
-  width: 90%;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-}
-.sub-modal h2 {
-  margin: 0 0 10px;
-  font-size: 24px;
-  color: #fff;
-}
-.sub-modal p {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 22px;
-}
-.sub-btn {
-  display: inline-block;
-  background: var(--accent);
-  color: #fff;
-  font-weight: 800;
-  padding: 13px 25px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 15px;
-  transition: 0.2s ease;
-  cursor: pointer;
-  border: none;
-}
-.sub-btn:hover {
-  opacity: 0.9;
-  transform: scale(1.03);
-}
-</style>
+    .subscribe-box{
+      width:min(440px,100%);
+      background:#16181C;
+      border:1px solid #00C2FF;
+      border-radius:12px;
+      padding:30px;
+      text-align:center;
+      box-shadow:0 0 35px rgba(0,194,255,.25);
+    }
+
+    .subscribe-box h2{
+      margin:0 0 10px;
+      color:#fff;
+    }
+
+    .subscribe-box p{
+      margin:0 0 22px;
+      color:#94A3B8;
+      line-height:1.6;
+    }
+
+    .subscribe-btn{
+      width:100%;
+      border:0;
+      border-radius:7px;
+      padding:13px 18px;
+      background:#00C2FF;
+      color:#000;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .subscribe-btn:hover{
+      box-shadow:0 0 18px rgba(0,194,255,.45);
+      transform:translateY(-1px);
+    }
+
+    .made-by{
+      position:fixed;
+      right:14px;
+      bottom:10px;
+      z-index:9998;
+      font-size:11px;
+      letter-spacing:1px;
+      color:#00C2FF;
+      opacity:.65;
+      pointer-events:none;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- Subscribe Gate Modal -->
-<div id="subGate" class="sub-overlay">
-  <div class="sub-modal">
-    <h2>Subscribe to Unlock</h2>
-    <p>Please subscribe to Meraj's YouTube channel to access the Fatality Roleplay 2.0 Vehicle Catalogue.</p>
-    <button id="subBtn" class="sub-btn">▶ Subscribe Channel & Continue</button>
+  <!-- Subscribe Gate -->
+  <div id="subscribe-gate" class="subscribe-gate">
+    <div class="subscribe-box">
+      <h2>Subscribe to Meraj</h2>
+      <p>
+        Subscribe to Meraj's YouTube channel to continue to the
+        Fatality Roleplay 2.0 Vehicle Database.
+      </p>
+
+      <button id="subscribe-btn" class="subscribe-btn">
+        ▶ Subscribe & Continue
+      </button>
+    </div>
   </div>
-</div>
 
-<header>
-  <h1>FATALITY ROLEPLAY 2.0</h1>
-  <p>Complete server-wide vehicle catalogue — every vehicle code from the supplied server list, with identification, brand, model year, category, department and reference photography.</p>
-</header>
-<div class="container">
-  <div class="controls">
-    <input id="search" placeholder="Search vehicle name, brand or spawn code...">
-    <select id="vehicleType">
-<option value="">🚘 ALL VEHICLE TYPES</option>
-<option value="Car">🚗 CARS</option>
-<option value="Motorcycle">🏍️ MOTORCYCLES</option>
-<option value="Boat">🛥️ BOATS</option>
-<option value="Helicopter">🚁 HELICOPTERS</option>
-<option value="Plane">✈️ PLANES</option>
-<option value="Utility">🚚 UTILITY / SPECIAL</option>
-</select>
-<select id="subtype"><option value="">🏷️ ALL SUBTYPES</option></select>
-<select id="department"><option value="">ALL</option><option> CIVILIAN</option><option>EMS</option><option>POLICE</option><option>GOVERNMENT</option><option>SPECIAL</option></select><select id="category"><option value="">All categories</option></select>
-    <select id="status"><option value="">All confidence levels</option><option value="confirmed">Confirmed</option><option value="likely">Likely / Custom</option><option value="unknown">Unknown</option></select>
+  <!-- Header -->
+  <header class="navbar">
+    <div class="nav-container">
+
+      <div class="brand-logo">
+        <span class="brand-title">
+          FATALITY <span class="accent-text">2.0</span>
+        </span>
+
+        <span class="brand-subtitle">
+          VEHICLE DATABASE
+        </span>
+      </div>
+
+      <div class="watermark-badge">
+        MADE BY MERAJ
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main-layout">
+
+    <!-- Filters -->
+    <aside class="filter-panel" aria-label="Vehicle Filters">
+
+      <div class="filter-header">
+        <h2>Filters</h2>
+
+        <button
+          id="reset-filters-btn"
+          class="btn-secondary"
+          title="Reset all active filters">
+          Reset All
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="filter-group">
+        <label for="search-input">
+          Search Database
+        </label>
+
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search by code, name, brand..."
+          autocomplete="off">
+      </div>
+
+      <!-- Access -->
+      <div class="filter-group">
+        <label for="access-filter">
+          Access Level
+        </label>
+
+        <select id="access-filter">
+          <option value="ALL">ALL</option>
+          <option value="CIVILIAN">CIVILIAN</option>
+          <option value="EMS">EMS</option>
+          <option value="POLICE">POLICE</option>
+          <option value="GOVERNMENT">GOVERNMENT</option>
+          <option value="ADMIN">ADMIN</option>
+        </select>
+      </div>
+
+      <!-- Vehicle Type -->
+      <div class="filter-group">
+        <label for="type-filter">
+          Vehicle Type
+        </label>
+
+        <select id="type-filter">
+          <option value="ALL">All Types</option>
+          <option value="Car">🚗 Car</option>
+          <option value="Motorcycle">🏍️ Motorcycle</option>
+          <option value="Boat">🛥️ Boat</option>
+          <option value="Helicopter">🚁 Helicopter</option>
+          <option value="Plane">✈️ Plane</option>
+          <option value="Utility">🚚 Utility</option>
+        </select>
+      </div>
+
+      <!-- Subtype -->
+      <div class="filter-group">
+        <label for="subtype-filter">
+          Subtype
+        </label>
+
+        <select id="subtype-filter">
+          <option value="ALL">
+            All Subtypes
+          </option>
+        </select>
+      </div>
+
+      <!-- Department -->
+      <div class="filter-group">
+        <label for="department-filter">
+          Department
+        </label>
+
+        <select id="department-filter">
+          <option value="ALL">
+            All Departments
+          </option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div class="filter-group">
+        <label for="status-filter">
+          Status
+        </label>
+
+        <select id="status-filter">
+          <option value="ALL">
+            All Statuses
+          </option>
+        </select>
+      </div>
+
+      <!-- Favorites -->
+      <div class="filter-group checkbox-group">
+        <label
+          for="favorites-toggle"
+          class="checkbox-label">
+
+          <input
+            type="checkbox"
+            id="favorites-toggle">
+
+          Show Favorites Only
+        </label>
+      </div>
+
+    </aside>
+
+    <!-- Content -->
+    <section class="content-area">
+
+      <div class="metrics-bar">
+        <span id="results-count">
+          Loading Fatality database...
+        </span>
+      </div>
+
+      <div
+        id="vehicle-grid"
+        class="vehicle-grid"
+        aria-live="polite">
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Vehicle Modal -->
+  <div
+    id="vehicle-modal"
+    class="modal-overlay"
+    aria-hidden="true"
+    role="dialog"
+    aria-labelledby="modal-title">
+
+    <div class="modal-card">
+
+      <button
+        id="modal-close"
+        class="modal-close-btn"
+        aria-label="Close Modal">
+        &times;
+      </button>
+
+      <div id="modal-body"></div>
+
+    </div>
+
   </div>
-  <div class="stats">
-    <div class="stat">Vehicles: <b id="count">0</b></div>
-    <div class="stat">Confirmed: <b id="confirmed">0</b></div>
-    <div class="stat">Likely: <b id="likely">0</b></div>
-    <div class="stat">Unknown: <b id="unknown">0</b></div>
+
+  <footer class="footer">
+    <p>
+      Fatality Roleplay 2.0 © Vehicle Database
+      |
+      <span class="accent-text">
+        MADE BY MERAJ
+      </span>
+    </p>
+  </footer>
+
+  <div class="made-by">
+    MADE BY MERAJ
   </div>
-  <div id="grid" class="grid"></div>
-</div>
-<footer>Fatality Roleplay 2.0 • Server Vehicle Catalogue • Source: uploaded server vehicle-code list • Reference photos may differ from the exact FiveM model.</footer>
 
-<!-- Watermark -->
-<div class="watermark">MADE BY MERAJ</div>
+  <script src="./js/app.js"></script>
 
-<script>
-// Subscribe Redirection Script
-document.getElementById('subBtn').addEventListener('click', function() {
-  window.open('https://www.youtube.com/@op_meraj_ff?sub_confirmation=1', '_blank');
-  document.getElementById('subGate').style.display = 'none';
-});
+  <script>
+    const gate = document.getElementById("subscribe-gate");
+    const button = document.getElementById("subscribe-btn");
 
-const cars=[["rwdevo", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["urus", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ghoul", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["charger", "charger", "Dodge", "—", "Muscle Sedan", "likely", "CIVILIAN"], ["topcargle", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["m760i", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mansorypnmr", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["silvk9rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["performante", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rs7", "RS7", "Audi", "—", "Sportback", "confirmed", "CIVILIAN"], ["Velar", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gv80", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["s650p", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["chiron", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["m5", "m5", "BMW", "—", "Sports Sedan", "likely", "CIVILIAN"], ["tundrac", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["CLA45s", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["jeep", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["xb7", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rsq8", "rsq8", "Audi", "—", "Performance SUV", "likely", "CIVILIAN"], ["sierra", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["arturac", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["g63", "G63 AMG", "Mercedes-Benz", "—", "SUV", "confirmed", "CIVILIAN"], ["f2fgtr34", "f2fgtr34", "Nissan", "—", "Sports Car", "likely", "CIVILIAN"], ["ncsbmwm8", "ncsbmwm8", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["ncsx7", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["nddragg", "nddragg", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["z", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["a", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["animated", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["sp", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ltwb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["lt", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["x6", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["civrswb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["Monte", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mnsry", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gtrs", "gtrs", "Nissan", "—", "Sports Car", "likely", "CIVILIAN"], ["turbos", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["a45", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["a80", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["a90sh", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["AAQ4", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["abhawk", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["aerox155", "Aerox 155", "Yamaha", "2016–", "Scooter", "confirmed", "CIVILIAN"], ["agerars", "Agera RS", "Koenigsegg", "2015–2018", "Hypercar", "confirmed", "CIVILIAN"], ["alpinab7", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["alpinab7BLACKEDITION", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["amarok", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["amggt16", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["amggtbs", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["AmgGtrLight", "AmgGtrLight", "Nissan", "—", "Sports Car", "likely", "CIVILIAN"], ["amgone", "AMG ONE", "Mercedes-AMG", "2022–", "Hypercar", "confirmed", "CIVILIAN"], ["amrevu23mg", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["animfk8hr", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["audirs8", "R8", "Audi", "—", "Supercar", "confirmed", "CIVILIAN"], ["autobio", "Range Rover Autobiography", "Land Rover", "—", "Luxury SUV", "confirmed", "CIVILIAN"], ["b63s", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ben17", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["bentaygam", "Bentayga", "Bentley", "2016–", "Luxury SUV", "confirmed", "CIVILIAN"], ["benzc32", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["benzsl63", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["bigdaddy", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["bmw8mm", "bmw8mm", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["bmwe39", "M5 E39", "BMW", "1998–2003", "Sports Sedan", "confirmed", "CIVILIAN"], ["bmwg07", "X7", "BMW", "2018–", "Luxury SUV", "confirmed", "CIVILIAN"], ["bmwvision", "bmwvision", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["BOSS429", "Mustang Boss 429", "Ford", "1969–1970", "Muscle Car", "confirmed", "CIVILIAN"], ["brz13varis", "BRZ Varis", "Subaru", "2013–2020", "Sports Coupe", "likely", "CIVILIAN"], ["c63hr", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["c63scpd", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["c8", "Corvette C8", "Chevrolet", "2020–", "Sports Car", "confirmed", "CIVILIAN"], ["c8p1", "Corvette C8 Rocket Bunny / Pandem", "Chevrolet", "2020–", "Widebody Sports Car", "confirmed", "CIVILIAN"], ["carrera19", "911 Carrera", "Porsche", "2019", "Sports Car", "likely", "CIVILIAN"], ["cayen19", "Cayenne", "Porsche", "2019", "SUV", "confirmed", "CIVILIAN"], ["cayennemecqq", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["cb650r", "CB650R", "Honda", "2019–", "Motorcycle", "confirmed", "CIVILIAN"], ["centuria", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["chargerf8", "Charger", "Dodge", "2015–2023", "Muscle Sedan", "likely", "CIVILIAN"], ["chironspeedhunter", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["chironsuper", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["chironsupersport22", "Chiron Super Sport", "Bugatti", "2022", "Hypercar", "confirmed", "CIVILIAN"], ["choilambo", "choilambo", "Lamborghini", "—", "Supercar", "likely", "CIVILIAN"], ["civic2020", "Civic", "Honda", "2020", "Sedan / Hatchback", "confirmed", "CIVILIAN"], ["ckbmwm4offwhite", "ckbmwm4offwhite", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["ckdrivingschool", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ckm3e36", "ckm3e36", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["claw", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["cls19", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["cls500w219", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["cls63s", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["contgt2011", "Continental GT", "Bentley", "2011", "Luxury Coupe", "confirmed", "CIVILIAN"], ["crownbp", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["cx30wz", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["dawnonyx", "Dawn Onyx Concept", "Rolls-Royce", "2016", "Convertible", "confirmed", "SPECIAL"], ["demon", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["demonhawkk", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DL_a45", "A45 AMG", "Mercedes-Benz", "—", "Hatchback", "likely", "CIVILIAN"], ["DL_G900", "Mercedes-AMG G900 / G-Class custom", "Mercedes-Benz / BRABUS", "—", "SUV", "likely", "CIVILIAN"], ["DL_rs6", "RS6 Avant", "Audi", "—", "Performance Wagon", "likely", "CIVILIAN"], ["DL_RS7", "RS7", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["dl450mec", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["dl550mec", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DL993", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLAmbulance", "EMS Ambulance Van", "Custom", "—", "EMS / Ambulance", "likely", "EMS"], ["DLAmbulance2", "EMS Ambulance Van 2", "Custom", "—", "EMS / Ambulance", "likely", "EMS"], ["DLAmbulance3", "EMS Ambulance Van 3", "Custom", "—", "EMS / Ambulance", "likely", "EMS"], ["DLCyber", "Cybertruck", "Tesla", "2023–", "Pickup", "confirmed", "CIVILIAN"], ["dle39m5", "dle39m5", "BMW", "—", "Sports Sedan", "likely", "CIVILIAN"], ["DLF450", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLGT", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLI8", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLLAF", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLM2", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLM5EMS", "BMW M5 EMS", "BMW", "—", "EMS / Sedan", "likely", "EMS"], ["DLM7EMS", "BMW M7-style EMS custom", "BMW", "—", "EMS / Sedan", "likely", "EMS"], ["dlmustmec", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["dlr34um", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLRAMEMS", "RAM EMS", "RAM", "—", "EMS / Pickup", "likely", "EMS"], ["DLRS3", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["DLRS6EMS", "Audi RS6 EMS", "Audi", "—", "EMS / Wagon", "likely", "EMS"], ["dlrs6um", "dlrs6um", "Audi", "—", "Performance Wagon", "likely", "CIVILIAN"], ["DLRS7EMS", "Audi RS7 EMS", "Audi", "—", "EMS / Sportback", "likely", "EMS"], ["DLRSQ8EMS", "Audi RS Q8 EMS", "Audi", "—", "EMS / SUV", "likely", "EMS"], ["DLX5EMS", "BMW X5 EMS", "BMW", "—", "EMS / SUV", "likely", "EMS"], ["DLYAMAHAEMS", "Yamaha EMS Motorcycle", "Yamaha", "—", "EMS / Motorcycle", "likely", "EMS"], ["DLZ4", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["Drag1", "Drag1", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["Drag2", "Drag2", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["Drag3", "Drag3", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["Drag4", "Drag4", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["Drag5", "Drag5", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["Drag6", "Drag6", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["Drag7", "Drag7", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["DragS14", "DragS14", "Custom", "—", "Drag / Race", "likely", "SPECIAL"], ["dvc63darwin", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["e39touring", "E39 Touring", "BMW", "1997–2004", "Wagon", "confirmed", "CIVILIAN"], ["e55", "E55 AMG", "Mercedes-Benz", "1997–2009", "Sports Sedan", "confirmed", "CIVILIAN"], ["e63s", "E63 S AMG", "Mercedes-Benz", "—", "Sports Sedan", "confirmed", "CIVILIAN"], ["e63test", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["e92bb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["eheli", "eheli", "Custom", "—", "Helicopter", "likely", "CIVILIAN"], ["ELEANOR", "Mustang Eleanor", "Ford", "1967-style", "Muscle Car", "confirmed", "CIVILIAN"], ["eli", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["escaladeprime", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["eve", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["evo9", "Lancer Evolution IX", "Mitsubishi", "2005–2007", "JDM Sports Sedan", "confirmed", "CIVILIAN"], ["evo9drift", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["evox", "Lancer Evolution X", "Mitsubishi", "2007–2016", "Sports Sedan", "confirmed", "CIVILIAN"], ["f1", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["f12rp", "F12", "Ferrari", "2012–2017", "Supercar", "likely", "CIVILIAN"], ["f812", "812 Superfast", "Ferrari", "2017–2024", "Supercar", "confirmed", "CIVILIAN"], ["fangle450", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["fd370z", "370Z", "Nissan", "2009–2020", "Sports Coupe", "confirmed", "CIVILIAN"], ["fenyrsupersport", "Fenyr SuperSport", "W Motors", "2015–2021", "Hypercar", "confirmed", "CIVILIAN"], ["ferrari812super", "ferrari812super", "Ferrari", "—", "Supercar", "likely", "CIVILIAN"], ["FGT", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["fk8", "Civic Type R FK8", "Honda", "2017–2021", "Hatchback", "confirmed", "CIVILIAN"], ["fnfmk4", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["FORTWO17", "Smart Fortwo", "Smart", "2017", "City Car", "confirmed", "CIVILIAN"], ["fpaceprior", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["furai", "Furai concept", "Mazda", "2008 concept", "Concept Sports Car", "confirmed", "SPECIAL"], ["fxxkevo", "FXX-K Evo", "Ferrari", "2017–", "Track Hypercar", "confirmed", "CIVILIAN"], ["g63c", "g63c", "Mercedes-Benz", "—", "SUV", "likely", "CIVILIAN"], ["G63Sam", "G63Sam", "Mercedes-Benz", "—", "SUV", "likely", "CIVILIAN"], ["g65", "G65 AMG", "Mercedes-Benz", "2012–2018", "Luxury SUV", "confirmed", "CIVILIAN"], ["g700brabusretuned", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["g81hr", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["g900przemo6x6", "g900przemo6x6", "Mercedes-Benz", "—", "SUV", "likely", "CIVILIAN"], ["gcma4sedan2021", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gcmlamboultimae", "gcmlamboultimae", "Lamborghini", "—", "Supercar", "likely", "CIVILIAN"], ["gcram1500", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gemera", "Gemera", "Koenigsegg", "2020–", "Mega GT", "confirmed", "CIVILIAN"], ["gfuckedsupra", "gfuckedsupra", "Toyota", "—", "Sports Coupe", "likely", "CIVILIAN"], ["giulia_2021", "Giulia", "Alfa Romeo", "2021", "Sports Sedan", "confirmed", "CIVILIAN"], ["gl63", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gmcev2", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["GODz95GSX", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["GODzBMWS1000RR", "S1000RR", "BMW Motorrad", "—", "Motorcycle", "confirmed", "CIVILIAN"], ["GODzDRIFTCAT", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["GODzKSTERZOTACHA", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["GODzNINJAH2", "Ninja H2", "Kawasaki", "2015–", "Motorcycle", "confirmed", "CIVILIAN"], ["GODzRAMTRX6x6", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["GODzRB26SUBI", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["GODzVIPS63AMG", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["GODzYAMR1", "YZF-R1", "Yamaha", "—", "Motorcycle", "confirmed", "CIVILIAN"], ["golf1", "Golf Mk1", "Volkswagen", "1974–1983", "Hatchback", "confirmed", "CIVILIAN"], ["golf7", "Golf Mk7", "Volkswagen", "2012–2020", "Hatchback", "confirmed", "CIVILIAN"], ["golf75r", "Golf 7.5 R", "Volkswagen", "2017–2020", "Hot Hatch", "confirmed", "CIVILIAN"], ["golf8gti", "Golf 8 GTI", "Volkswagen", "2020–", "Hot Hatch", "confirmed", "CIVILIAN"], ["golf91wideprzemo", "golf91wideprzemo", "Volkswagen", "—", "Hatchback", "likely", "CIVILIAN"], ["gt17", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gt2rs", "911 GT2 RS", "Porsche", "2017–2019", "Sports Car", "confirmed", "CIVILIAN"], ["gt3demon", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gt3hycade", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gt63", "AMG GT 63", "Mercedes-AMG", "—", "Sports Sedan", "confirmed", "CIVILIAN"], ["gt63mt", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gt86trust", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gta5rp_veh_ferrari19", "gta5rp_veh_ferrari19", "Ferrari", "—", "Supercar", "likely", "CIVILIAN"], ["gta5rp_veh_gle1", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gta5rp_veh_gtr33", "gta5rp_veh_gtr33", "Nissan", "—", "Sports Car", "likely", "CIVILIAN"], ["gto66c", "GTO 1966", "Pontiac", "1966", "Classic Muscle", "confirmed", "CIVILIAN"], ["gtr50", "GT-R50", "Nissan / Italdesign", "2020", "Supercar", "confirmed", "CIVILIAN"], ["gtrh", "gtrh", "Nissan", "—", "Sports Car", "likely", "CIVILIAN"], ["gtz34be", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["gurkharb", "Gurkha", "Force Motors", "—", "SUV", "confirmed", "CIVILIAN"], ["gxone", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["h2m", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["HELLCATF9", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["hellcatlb", "Charger Hellcat Widebody", "Dodge", "2015–2023", "Muscle Sedan", "confirmed", "CIVILIAN"], ["HELLTACOMAV3", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["hexerz2", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["huracanpriorbeast", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["hycadeevo", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["Hycaders6", "Hycaders6", "Audi", "—", "Performance Wagon", "likely", "CIVILIAN"], ["hycadesti", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["hycadeurus", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["hyundaiveloster", "Veloster", "Hyundai", "2011–2022", "Hatchback", "confirmed", "CIVILIAN"], ["ikx3abt20", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ikx3mc2021", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ikx3rebel22", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["impronta4", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["jagoffroad", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["jes21", "Jesko", "Koenigsegg", "2021", "Hypercar", "confirmed", "CIVILIAN"], ["jesko", "Jesko", "Koenigsegg", "2019–", "Hypercar", "confirmed", "CIVILIAN"], ["kart", "Go-kart", "Custom", "—", "Kart", "confirmed", "SPECIAL"], ["kawagala", "kawagala", "Kawasaki", "—", "Motorcycle", "likely", "CIVILIAN"], ["keyrus", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["kgc10", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["kgjoker", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["KillerHwak", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["kln", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["km1000rr", "S1000RR", "BMW Motorrad", "—", "Motorcycle", "confirmed", "CIVILIAN"], ["kyza36", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["lbperfs", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["lbwk35", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["lowrider_ballas", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["lpchopper2", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["m135iwb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["m3e36", "M3 E36", "BMW", "1992–1999", "Sports Coupe", "confirmed", "CIVILIAN"], ["m3e46", "M3 E46", "BMW", "2000–2006", "Sports Coupe", "confirmed", "CIVILIAN"], ["m3e92", "M3 E92", "BMW", "2007–2013", "Sports Coupe", "confirmed", "CIVILIAN"], ["m3g80", "M3 G80", "BMW", "2021–", "Sports Sedan", "confirmed", "CIVILIAN"], ["m3g80mp", "m3g80mp", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["m3s", "m3s", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["m4c", "m4c", "BMW", "—", "Sports Coupe", "likely", "CIVILIAN"], ["M4CC", "M4CC", "BMW", "—", "Sports Coupe", "likely", "CIVILIAN"], ["m4f82", "M4 F82", "BMW", "2014–2020", "Sports Coupe", "confirmed", "CIVILIAN"], ["m4lb2", "m4lb2", "BMW", "—", "Sports Coupe", "likely", "CIVILIAN"], ["m4speedhunter", "m4speedhunter", "BMW", "—", "Sports Coupe", "likely", "CIVILIAN"], ["m5cs22", "M5 CS", "BMW", "2022", "Sports Sedan", "confirmed", "CIVILIAN"], ["m5e60", "M5 E60", "BMW", "2004–2010", "Sports Sedan", "confirmed", "CIVILIAN"], ["m6e24", "M6 E24", "BMW", "1983–1989", "Classic Sports Coupe", "confirmed", "CIVILIAN"], ["mach1", "Mustang Mach 1", "Ford", "2021–2023", "Muscle Car", "confirmed", "CIVILIAN"], ["machewb", "Mustang Mach-E", "Ford", "2021–", "Electric SUV", "confirmed", "CIVILIAN"], ["madf350lift", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["manhartx7", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mans65", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["manscountach", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mansgt", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["manspana", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mansrs6", "mansrs6", "Audi", "—", "Performance Wagon", "likely", "CIVILIAN"], ["manssupersnake", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mansurus", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["maybach", "Maybach", "Mercedes-Maybach", "—", "Luxury Sedan", "confirmed", "CIVILIAN"], ["mayg600p", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mercec63s", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["merse63", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mi8", "i8", "BMW", "2014–2020", "Sports Car", "confirmed", "CIVILIAN"], ["mk4hycade", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mlbrabus", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mlnovitec", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["model3", "Model 3", "Tesla", "2017–", "Electric Sedan", "confirmed", "CIVILIAN"], ["models", "Model S", "Tesla", "2012–", "Electric Sedan", "confirmed", "CIVILIAN"], ["modelx", "Model X", "Tesla", "2015–", "Electric SUV", "confirmed", "CIVILIAN"], ["msls", "SLS AMG", "Mercedes-Benz", "2010–2015", "Supercar", "confirmed", "CIVILIAN"], ["mteche39", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["mustang65", "Mustang 1965", "Ford", "1965", "Classic Muscle", "confirmed", "CIVILIAN"], ["mxpan", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["neonp1", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ninjah2", "Ninja H2", "Kawasaki", "2015–", "Motorcycle", "confirmed", "CIVILIAN"], ["nismo20", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["nissanr36", "GT-R R36 concept/custom", "Nissan", "—", "Sports Car", "likely", "SPECIAL"], ["nissantitan17", "Titan", "Nissan", "2017", "Pickup", "confirmed", "CIVILIAN"], ["nitro11", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["nitro9", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["nm_ctsv", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["nm_z71", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["nsx17", "NSX", "Acura", "2017", "Supercar", "confirmed", "CIVILIAN"], ["ocnetrongt", "e-tron GT", "Audi", "2021–", "Electric Sports Sedan", "confirmed", "CIVILIAN"], ["owlalpina", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["oycdefender", "Defender", "Land Rover", "—", "SUV", "confirmed", "CIVILIAN"], ["p1lbwk", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["panamturs21", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["passat", "Passat", "Volkswagen", "—", "Sedan", "confirmed", "CIVILIAN"], ["pd_escalader", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["polbmwm3", "polbmwm3", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["polbmwm5", "polbmwm5", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["polbmwm7", "polbmwm7", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["polcoach", "polcoach", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["poldurango", "poldurango", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["polestar1", "Polestar 1", "Polestar", "2019–2021", "Hybrid Sports Coupe", "confirmed", "CIVILIAN"], ["polgt63", "polgt63", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["polheli", "polheli", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["policeboat", "policeboat", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["polmustang", "polmustang", "Ford", "—", "Muscle Car", "likely", "CIVILIAN"], ["polo2018", "Polo", "Volkswagen", "2018", "Hatchback", "confirmed", "CIVILIAN"], ["polrs6", "polrs6", "Audi", "—", "Performance Wagon", "likely", "CIVILIAN"], ["polsilverado19", "polsilverado19", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["por911gt3", "911 GT3", "Porsche", "—", "Sports Car", "confirmed", "CIVILIAN"], ["porche911speedhunter", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["Prisonvan2rb", "Prison Van", "Custom", "—", "Prison / Utility", "confirmed", "GOVERNMENT"], ["q8hycade", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["q8prior", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["r34h", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["r35secret", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["r36fp", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["r820", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["r8beastedit", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["raid", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["ramtrx6x6", "RAM TRX 6x6", "RAM", "—", "6x6 Pickup", "likely", "CIVILIAN"], ["rapger19", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rculi", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rd", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rmod240sx", "240SX", "Nissan", "1989–1998", "JDM Coupe", "confirmed", "CIVILIAN"], ["rmodbentley1", "rmodbentley1", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodcharger", "rmodcharger", "Dodge", "—", "Muscle Sedan", "likely", "CIVILIAN"], ["rmodcharger69", "rmodcharger69", "Dodge", "—", "Muscle Sedan", "likely", "CIVILIAN"], ["rmode63s", "rmode63s", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodf40", "F40", "Ferrari", "1987–1992", "Supercar", "confirmed", "CIVILIAN"], ["rmodfordgt", "Ford GT", "Ford", "—", "Supercar", "confirmed", "CIVILIAN"], ["rmodg65", "G65 AMG", "Mercedes-Benz", "2012–2018", "SUV", "confirmed", "CIVILIAN"], ["rmodgt63", "rmodgt63", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodgtr", "rmodgtr", "Nissan", "—", "Sports Car", "likely", "CIVILIAN"], ["rmodjeepg", "rmodjeepg", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodm3e36", "M3 E36", "BMW", "1992–1999", "Sports Coupe", "confirmed", "CIVILIAN"], ["rmodm3joker", "rmodm3joker", "BMW", "—", "Sports Car", "likely", "CIVILIAN"], ["rmodm4", "rmodm4", "BMW", "—", "Sports Coupe", "likely", "CIVILIAN"], ["rmodm4gts", "M4 GTS", "BMW", "2016", "Sports Coupe", "confirmed", "CIVILIAN"], ["rmodm4Unikat", "rmodm4Unikat", "BMW", "—", "Sports Coupe", "likely", "CIVILIAN"], ["rmodmk7", "rmodmk7", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodmustang", "rmodmustang", "Ford", "—", "Muscle Car", "likely", "CIVILIAN"], ["rmodp1gtr", "P1 GTR", "McLaren", "2015–2016", "Track Hypercar", "confirmed", "CIVILIAN"], ["rmodpagani", "rmodpagani", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodr50", "rmodr50", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodr8alpil", "rmodr8alpil", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodr8alpilx", "rmodr8alpilx", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodr8c", "rmodr8c", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodskyline34", "Skyline R34", "Nissan", "1999–2002", "JDM Sports Car", "confirmed", "CIVILIAN"], ["rmodsvj", "Aventador SVJ", "Lamborghini", "2018–2021", "Supercar", "confirmed", "CIVILIAN"], ["rmodx6", "rmodx6", "Custom", "—", "Modified Vehicle", "likely", "CIVILIAN"], ["rmodzl1", "Camaro ZL1", "Chevrolet", "2017–", "Muscle Car", "confirmed", "CIVILIAN"], ["rocket", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["Rolls6x6", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["RoyalCustome39m5_wb", "RoyalCustome39m5_wb", "BMW", "—", "Sports Sedan", "likely", "CIVILIAN"], ["RoyalCustomKawasakiSH2", "RoyalCustomKawasakiSH2", "Kawasaki", "—", "Motorcycle", "likely", "CIVILIAN"], ["rr01", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rr21shelbystreet", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rrghostbyv", "Ghost", "Rolls-Royce", "2020–", "Luxury Sedan", "likely", "CIVILIAN"], ["rrhycadeevoxpd", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rrphantom", "Phantom", "Rolls-Royce", "—", "Luxury Sedan", "confirmed", "CIVILIAN"], ["rrwraith", "Wraith", "Rolls-Royce", "2013–2023", "Luxury Coupe", "confirmed", "CIVILIAN"], ["rs322sedan", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rs4rk", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rs5mans", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["rs615", "rs615", "Audi", "—", "Performance Wagon", "likely", "CIVILIAN"], ["rs666", "rs666", "Audi", "—", "Performance Wagon", "likely", "CIVILIAN"], ["rs6abt20", "RS6 ABT", "Audi", "2020", "Performance Wagon", "confirmed", "CIVILIAN"], ["rs6c8", "RS6 C8", "Audi", "2019–", "Performance Wagon", "confirmed", "CIVILIAN"], ["rs6rabt20", "RS6-R ABT", "Audi", "2020", "Performance Wagon", "confirmed", "CIVILIAN"], ["rs721", "rs721", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["rs7beast", "rs7beast", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["rs7bratwa", "rs7bratwa", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["rs7c821", "rs7c821", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["rs7c8beast", "rs7c8beast", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["rs7mans", "rs7mans", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["rs7wide", "rs7wide", "Audi", "—", "Sportback", "likely", "CIVILIAN"], ["RufusVanquish", "RufusVanquish", "Custom", "—", "Van", "likely", "CIVILIAN"], ["rx7", "RX-7", "Mazda", "—", "Sports Coupe", "confirmed", "CIVILIAN"], ["rx7veilside", "RX-7 Veilside", "Mazda", "—", "JDM Sports Coupe", "confirmed", "CIVILIAN"], ["RYGBus", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["s1", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["s15", "Silvia S15", "Nissan", "1999–2002", "JDM Coupe", "confirmed", "CIVILIAN"], ["s15lunar", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["s500w222", "S500 W222", "Mercedes-Benz", "2013–2020", "Luxury Sedan", "confirmed", "CIVILIAN"], ["s63coupe", "S63 Coupe", "Mercedes-Benz", "—", "Luxury Coupe", "confirmed", "CIVILIAN"], ["s63msc", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["s8d4", "S8 D4", "Audi", "2012–2018", "Luxury Sedan", "confirmed", "CIVILIAN"], ["scubieblob", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["sema10X10", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["senna", "Senna", "McLaren", "2018–2020", "Hypercar", "confirmed", "CIVILIAN"], ["sex6", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["sf90", "SF90 Stradale", "Ferrari", "2019–", "Hybrid Supercar", "confirmed", "CIVILIAN"], ["sian", "Sián", "Lamborghini", "2019–2022", "Hybrid Supercar", "confirmed", "CIVILIAN"], ["silviagd", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["sinacp", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["singer", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["skyline", "Skyline", "Nissan", "—", "JDM Sports Car", "likely", "CIVILIAN"], ["specialtf", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["speeddemonrb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["suprapandem", "Supra Pandem", "Toyota", "—", "Widebody Sports Coupe", "likely", "CIVILIAN"], ["suv_triaden", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["sw_bearcat", "BearCat", "Lenco", "—", "Armored Police Vehicle", "confirmed", "POLICE"], ["sw_charg", "sw_charg", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["sw_durango", "sw_durango", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["sw_sprinter", "sw_sprinter", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["sw_subrb", "sw_subrb", "Custom", "—", "Police Vehicle", "likely", "POLICE"], ["swl", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["taycan", "Taycan", "Porsche", "2019–", "Electric Sports Sedan", "confirmed", "CIVILIAN"], ["taycanani", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["techart17", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["terzo", "Terzo Millennio", "Lamborghini", "Concept", "Concept Supercar", "confirmed", "SPECIAL"], ["terzo1", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["teslapd", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["teslaroad", "Roadster", "Tesla", "2008–2012", "Electric Sports Car", "confirmed", "CIVILIAN"], ["topcargt63", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["trhawk", "Grand Cherokee Trackhawk", "Jeep", "2017–2021", "Performance SUV", "confirmed", "CIVILIAN"], ["trx", "RAM 1500 TRX", "RAM", "2021–2024", "Performance Pickup", "confirmed", "CIVILIAN"], ["TTSTO", "Huracán STO", "Lamborghini", "2020–", "Track Supercar", "confirmed", "CIVILIAN"], ["unmarkedjl", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["Urus_Stretch_6", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["urusbeastedit", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["v60hr", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor10rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor12rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor13rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor15rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor1rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor3rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor5rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor6rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valor9rb", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["valorharley", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["van_blacklions", "van_blacklions", "Custom", "—", "Van", "likely", "CIVILIAN"], ["van_vagos", "van_vagos", "Custom", "—", "Van", "likely", "CIVILIAN"], ["vanzhycade", "vanzhycade", "Custom", "—", "Van", "likely", "CIVILIAN"], ["vanztt", "vanztt", "Custom", "—", "Van", "likely", "CIVILIAN"], ["vanzur", "vanzur", "Custom", "—", "Van", "likely", "CIVILIAN"], ["variszupra", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["venatus", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["w140", "S-Class W140", "Mercedes-Benz", "1991–1998", "Luxury Sedan", "confirmed", "CIVILIAN"], ["w222wald", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["waldw222", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["wmfenyr", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["wraith", "Wraith", "Rolls-Royce", "2013–2023", "Luxury Coupe", "confirmed", "CIVILIAN"], ["x6wz", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["xc90", "XC90", "Volvo", "2015–", "SUV", "confirmed", "CIVILIAN"], ["yzfr6", "YZF-R6", "Yamaha", "1999–2020", "Motorcycle", "confirmed", "CIVILIAN"], ["yzfr7", "YZF-R7", "Yamaha", "2021–", "Motorcycle", "confirmed", "CIVILIAN"], ["z8r", "Z8", "BMW", "2000–2003", "Roadster", "confirmed", "CIVILIAN"], ["zentenario", "Centenario", "Lamborghini", "2016–2017", "Supercar", "confirmed", "CIVILIAN"], ["zl1", "Camaro ZL1", "Chevrolet", "2017–", "Muscle Car", "confirmed", "CIVILIAN"], ["zlay_gtz35", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["zm_rocket900", "Identification pending", "Custom", "—", "Unclassified", "unknown", "CIVILIAN"], ["zm_s500", "S500 custom", "Mercedes-Benz", "—", "Luxury Sedan", "likely", "CIVILIAN"], ["zx10r", "Ninja ZX-10R", "Kawasaki", "2004–", "Motorcycle", "confirmed", "CIVILIAN"], ["zx6r", "Ninja ZX-6R", "Kawasaki", "1995–", "Motorcycle", "confirmed", "CIVILIAN"]];
-const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-const photo=c=>"https://source.unsplash.com/800x500/?"+encodeURIComponent(c[1]);
+    button.addEventListener("click", () => {
+      window.open(
+        "https://www.youtube.com/@op_meraj_ff?sub_confirmation=1",
+        "_blank",
+        "noopener,noreferrer"
+      );
 
-const typeIcons={
- Car:"🚗", Motorcycle:"🏍️", Boat:"🛥️", Helicopter:"🚁", Plane:"✈️", Utility:"🚚"
-};
-const subtypeMap={
- Car:["⚡ Electric","🏎️ Supercar","💎 Hypercar","🚘 Sedan","🚙 SUV","🚐 Wagon","🚪 Coupe","🏁 Drag Racing","🏆 Race / Track","💪 Muscle","🇯🇵 JDM","🇩🇪 German","👑 Luxury","🛠️ Modified","🚑 Emergency","🚓 Police","🚛 Pickup","🚐 Van","🕰️ Classic / Vintage"],
- Motorcycle:["⚡ Electric Bike","🏁 Sport Bike","🏍️ Superbike","🏍️ Naked Bike","🛵 Scooter","🏁 Racing Bike","🇯🇵 JDM / Japanese","🚑 Emergency Bike","🛠️ Modified Bike","🕰️ Classic Bike"],
- Boat:["🚤 Speedboat","🛥️ Yacht","🏁 Racing Boat","🚓 Police Boat","🚑 Rescue Boat","🎣 Fishing / Utility","🛠️ Special Boat"],
- Helicopter:["🚁 Civilian Helicopter","🚓 Police Helicopter","🚑 EMS Helicopter","🎖️ Military / Tactical","🏁 Special Helicopter"],
- Plane:["✈️ Private Jet","🛩️ Propeller Plane","🛫 Passenger / Transport","🚓 Police / Government","🚑 Medical / Rescue","🏁 Special / Racing"],
- Utility:["🚑 EMS / Ambulance","🚓 Police","🏛️ Government","🚒 Fire / Rescue","🚛 Truck / Utility","🏁 Drag / Racing","🎮 Special / Custom"]
-};
+      gate.style.display = "none";
+    });
+  </script>
 
-function classify(x){
- const raw=(x[1]+" "+x[4]+" "+x[6]+" "+x[0]).toLowerCase();
- let type="Car";
- if(/bike|motorcycle|ninja|yamaha|zx6|zx10|r1|r6|r7|s1000|cb650|aerox|ducati|harley/.test(raw)) type="Motorcycle";
- else if(/boat|yacht|dinghy|jet.?ski|speedboat|marine/.test(raw)) type="Boat";
- else if(/heli|helicopter|buzzard|frogger|maverick|swift|havok|volatus|polmav/.test(raw)) type="Helicopter";
- else if(/plane|jet|aircraft|luxor|shamal|velum|dodo|mammatus|titan|hydra|lazer|besra|miljet/.test(raw)) type="Plane";
- else if(/ambulance|prison|truck|van|utility|fire|bus|trailer/.test(raw)) type="Utility";
-
- let sub="🎮 Special / Custom";
- if(/electric|tesla|taycan|polestar|model 3|model s|model x|roadster|e-tron|ev /.test(raw)) sub="⚡ Electric";
- else if(/drag|drags|dragster/.test(raw)) sub="🏁 Drag Racing";
- else if(/suv|urus|cayenne|gv80|x5|x7|g63|g65|g900|velar|range rover|bentayga|defender|trackhawk|trx|tundra/.test(raw)) sub="🚙 SUV";
- else if(/sedan|m5|m3|m7|a45|rs7|rs8|s500|s63|s8|charger|civic|giulia|passat|maybach/.test(raw)) sub="🚘 Sedan";
- else if(/wagon|avant|touring|estate/.test(raw)) sub="🚐 Wagon";
- else if(/coupe|911|gt3|gt2|m4|m6|brz|370z|240sx|supra|rx7|silvia|skyline/.test(raw)) sub="🚪 Coupe";
- else if(/hyper|chiron|jesko|senna|fenyr|gemera|fxx|sf90|sian|zentenario|amgone|terzo|p1 gtr/.test(raw)) sub="💎 Hypercar";
- else if(/ferrari|lambo|lamborghini|mclaren|r8|nsx|f40|812|performante|huracan|aventador/.test(raw)) sub="🏎️ Supercar";
- else if(/muscle|mustang|camaro|challenger|charger|boss429|mach1|hellcat|zl1|gto/.test(raw)) sub="💪 Muscle";
- else if(/golf|civic|polo|veloster|fk8|hatch/.test(raw)) sub="🚗 Hatchback";
- else if(/pickup|tundra|ram|amarok|f150|silverado/.test(raw)) sub="🚛 Pickup";
- else if(/classic|vintage|old|e39|e36|e46|e92|w140|w222|1965|1966|monte/.test(raw)) sub="🕰️ Classic / Vintage";
- else if(type==="Motorcycle") {
-   if(/ninja|r1|r6|r7|s1000|zx/.test(raw)) sub="🏍️ Superbike";
-   else if(/aerox|scooter/.test(raw)) sub="🛵 Scooter";
-   else if(/race|racing/.test(raw)) sub="🏁 Racing Bike";
-   else sub="🏍️ Sport Bike";
- }
- else if(type==="Boat") {
-   if(/yacht/.test(raw)) sub="🛥️ Yacht";
-   else if(/race|racing|speed/.test(raw)) sub="🏁 Racing Boat";
-   else sub="🚤 Speedboat";
- }
- else if(type==="Helicopter") {
-   if(/police|polmav/.test(raw)) sub="🚓 Police Helicopter";
-   else if(/ems|ambulance|medical/.test(raw)) sub="🚑 EMS Helicopter";
-   else sub="🚁 Civilian Helicopter";
- }
- else if(type==="Plane") {
-   if(/jet/.test(raw)) sub="✈️ Private Jet";
-   else sub="🛩️ Propeller Plane";
- }
- else if(type==="Utility") {
-   if(/ems|ambulance/.test(raw)) sub="🚑 EMS / Ambulance";
-   else if(/police|sw_|pd/.test(raw)) sub="🚓 Police";
-   else if(/government|gov/.test(raw)) sub="🏛️ Government";
-   else if(/fire/.test(raw)) sub="🚒 Fire / Rescue";
-   else if(/truck|pickup|van/.test(raw)) sub="🚛 Truck / Utility";
- }
- return [type,sub];
-}
-
-const classified=cars.map(x=>{const z=classify(x);return [...x,z[0],z[1]];});
-
-function fillSubtypes(){
- const t=document.getElementById("vehicleType").value;
- const sel=document.getElementById("subtype");
- const vals=t ? [...new Set(classified.filter(x=>x[7]===t).map(x=>x[8]))] : [...new Set(classified.map(x=>x[8]))];
- sel.innerHTML='<option value="">🏷️ ALL SUBTYPES</option>'+vals.sort().map(v=>`<option>${esc(v)}</option>`).join("");
-}
-
-function render(){
- const q=document.getElementById("search").value.toLowerCase();
- const d=document.getElementById("department").value;
- const c=document.getElementById("category").value;
- const st=document.getElementById("status").value;
- const vt=document.getElementById("vehicleType").value;
- const sub=document.getElementById("subtype").value;
- const a=classified.filter(x=>
-   (!q||x.join(" ").toLowerCase().includes(q)) &&
-   (!d||x[6]===d) && (!c||x[4]===c) && (!st||x[5]===st) &&
-   (!vt||x[7]===vt) && (!sub||x[8]===sub)
- );
- document.getElementById("grid").innerHTML=a.map(x=>`
- <article class="card">
-  <div class="photo"><img loading="lazy" src="${frcPhoto(x)}" alt="${esc(x[1])}" onerror="this.style.display='none';this.parentElement.innerHTML='<span class="fallback">${typeIcons[x[7]]||"🚘"}</span>'"></div>
-  <div class="info">
-   <div class="code">${esc(x[0])}</div>
-   <div class="name">${typeIcons[x[7]]||"🚘"} ${esc(x[1])}</div>
-   <div class="meta">
-    <div>Brand<strong>${esc(x[2])}</strong></div><div>Year<strong>${esc(x[3])}</strong></div>
-    <div>Vehicle Type<strong>${typeIcons[x[7]]||"🚘"} ${esc(x[7])}</strong></div>
-    <div>Type<strong>${esc(x[8])}</strong></div>
-    <div>Category<strong>${esc(x[4])}</strong></div><div>Department<strong>${esc(x[6])}</strong></div>
-   </div>
-   <span class="badge ${x[5]}">${x[5]==="confirmed"?"✓ CONFIRMED":x[5]==="likely"?"⚠ LIKELY / CUSTOM":"? NEEDS VERIFICATION"}</span>
-  </div>
- </article>`).join("");
- document.getElementById("count").textContent=a.length;
- document.getElementById("confirmed").textContent=a.filter(x=>x[5]==="confirmed").length;
- document.getElementById("likely").textContent=a.filter(x=>x[5]==="likely").length;
- document.getElementById("unknown").textContent=a.filter(x=>x[5]==="unknown").length;
-}
-function frcEsc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-function frcPhoto(c){return "https://source.unsplash.com/800x500/?"+encodeURIComponent(c[1]);}
-
-[...new Set(cars.map(x=>x[4]))].sort().forEach(x=>document.getElementById("category").insertAdjacentHTML("beforeend",`<option>${frcEsc(x)}</option>`));
-["search","department","category","status","subtype"].forEach(id=>document.getElementById(id).addEventListener(id==="search"?"input":"change",render));
-document.getElementById("vehicleType").addEventListener("change",()=>{fillSubtypes();render();});
-fillSubtypes();render();
-</script>
 </body>
 </html>
