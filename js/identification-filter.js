@@ -6,7 +6,6 @@
   let mode = 'NORMAL';
   let observer = null;
   let raf = 0;
-  let applying = false;
 
   const isUnknown = (card) => {
     const status = (card.querySelector('.badge-status')?.textContent || '').trim().toLowerCase();
@@ -26,69 +25,68 @@
   function ensureFilter() {
     const panel = document.querySelector('.filter-panel');
     if (!panel || document.getElementById(FILTER_ID)) return;
+
     const group = document.createElement('div');
     group.className = 'filter-group identification-filter-group';
-    group.innerHTML = `<label for="${FILTER_ID}">Identification</label>
-      <select id="${FILTER_ID}" aria-label="Choose normal vehicles or identification pending vehicles">
+    group.innerHTML = `
+      <label for="${FILTER_ID}">Identification</label>
+      <select id="${FILTER_ID}" aria-label="Choose normal catalogue or identification queue">
         <option value="NORMAL">✅ Normal Catalogue</option>
         <option value="PENDING">🔎 Show Identification Pending</option>
       </select>
-      <small class="identification-filter-help">Pending vehicles stay hidden until this is enabled.</small>`;
+      <small class="identification-filter-help">Pending vehicles stay hidden until you enable this.</small>`;
+
     const speedGroup = document.getElementById('speed-filter')?.closest('.filter-group');
     if (speedGroup) panel.insertBefore(group, speedGroup);
     else panel.appendChild(group);
+
     document.getElementById(FILTER_ID).addEventListener('change', (e) => {
-      mode = e.target.value;
+      mode = e.target.value === 'PENDING' ? 'PENDING' : 'NORMAL';
+      window.dispatchEvent(new CustomEvent('fatality:identification-mode', { detail: { mode } }));
       apply();
     });
   }
 
-  function hideOrShowPanel() {
+  function togglePendingPanel() {
     const panel = document.getElementById(PANEL_ID);
     if (!panel) return;
-    panel.hidden = mode !== 'PENDING';
-    panel.setAttribute('aria-hidden', mode !== 'PENDING' ? 'true' : 'false');
+    const pending = mode === 'PENDING';
+    panel.hidden = !pending;
+    panel.setAttribute('aria-hidden', pending ? 'false' : 'true');
+    panel.style.display = pending ? '' : 'none';
   }
 
   function apply() {
-    if (applying) return;
-    hideOrShowPanel();
+    togglePendingPanel();
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => {
-      if (applying) return;
       const grid = document.getElementById('vehicle-grid');
       if (!grid) return;
-      applying = true;
       const cards = [...grid.querySelectorAll('.vehicle-card')];
       cards.forEach(card => {
         const unknown = isUnknown(card);
-        card.style.display = (mode === 'PENDING' || !unknown) ? '' : 'none';
+        // Normal mode: clean catalogue only. Pending mode: show ALL catalogue cards as-is;
+        // the dedicated Unidentified Vehicles panel above contains the pending queue.
+        card.style.display = mode === 'NORMAL' && unknown ? 'none' : '';
         card.dataset.identificationPending = unknown ? 'true' : 'false';
       });
 
-      if (mode === 'NORMAL' && cards.length > 1) {
-        const sorted = [...cards].sort((a, b) => score(b) - score(a));
-        const sameOrder = sorted.every((card, i) => card === cards[i]);
-        if (!sameOrder) {
-          const fragment = document.createDocumentFragment();
-          sorted.forEach(card => fragment.appendChild(card));
-          grid.appendChild(fragment);
-        }
+      if (mode === 'NORMAL') {
+        cards.sort((a, b) => score(b) - score(a));
+        const fragment = document.createDocumentFragment();
+        cards.forEach(card => fragment.appendChild(card));
+        grid.appendChild(fragment);
       }
-      applying = false;
     });
   }
 
   function install() {
     ensureFilter();
-    hideOrShowPanel();
+    togglePendingPanel();
     apply();
     const grid = document.getElementById('vehicle-grid');
     if (grid && !observer) {
-      observer = new MutationObserver((mutations) => {
-        if (applying) return;
-        if (mutations.some(m => m.addedNodes.length || m.removedNodes.length)) apply();
-      });
+      observer = new MutationObserver(() => apply());
       observer.observe(grid, { childList: true });
     }
   }
