@@ -30,14 +30,19 @@
     'DLM5EMS': 'https://fivemgg.nyc3.digitaloceanspaces.com/fivem/2024/05/10084149/BMW-M5-Emergency-Services-FiveM-3.webp',
     'DLRS6EMS': 'https://dunb17ur4ymx4.cloudfront.net/packages/images/c52ef023eacb2bf8ad027d17501698e0f3fac553.png',
     'DLRS7EMS': 'https://static.wixstatic.com/media/433ec0_d8e54d3364654f52a33392b77c6eebe8~mv2.png/v1/fill/w_980%2Ch_495%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/433ec0_d8e54d3364654f52a33392b77c6eebe8~mv2.png',
+    'DLRSQ8EMS': 'https://fivemdealership.net/cdn/shop/files/GTA5_2024-03-17_06-32-16.png?v=1711560941&width=1100',
     'DLX5EMS': 'https://img.gta5-mods.com/q75/images/bmw-x5-ambulance-rapid-response-vehicle-skin/788d8b-1.png',
+    'DLRAMEMS': 'https://othrin.com/cdn/shop/files/Screenshot_27.png?v=1748310788&width=1646',
     'DLYAMAHAEMS': 'https://digitiallatvia.com/cdn/shop/files/2_13a81cf3-e870-4609-aa31-9aae2a4129d5.jpg?v=1704638952&width=3840',
-    'DLAmbulance': 'https://digitiallatvia.com/cdn/shop/files/2_13a81cf3-e870-4609-aa31-9aae2a4129d5.jpg?v=1704638952&width=3840',
-    'DLAmbulance2': 'https://digitiallatvia.com/cdn/shop/files/2_13a81cf3-e870-4609-aa31-9aae2a4129d5.jpg?v=1704638952&width=3840',
-    'DLAmbulance3': 'https://digitiallatvia.com/cdn/shop/files/2_13a81cf3-e870-4609-aa31-9aae2a4129d5.jpg?v=1704638952&width=3840'
-  };
 
-  const FALLBACK_MARK = 'data-fatality-expanded-image-bound';
+    /* Correct EMS van mappings. These must NEVER point to the Yamaha image. */
+    'DLAmbulance': 'https://img.gta5-mods.com/q95/images/sams-speedo-express-ambulance-minipack-vehicles-eup-lore-friendly-add-on/ce59e0-20200416000956_1.jpg?fatality=ambulance1',
+    'DLAmbulance2': 'https://digitiallatvia.com/cdn/shop/files/ems-pack-v2-5-vehicles-469678.jpg?v=1715292151&fatality=ambulance2',
+    'DLAmbulance3': 'https://i.etsystatic.com/31572011/r/il/a9f827/5000406406/il_fullxfull.5000406406_8axe.jpg?fatality=ambulance3',
+    'dlambulance': 'https://img.gta5-mods.com/q95/images/sams-speedo-express-ambulance-minipack-vehicles-eup-lore-friendly-add-on/ce59e0-20200416000956_1.jpg?fatality=ambulance1',
+    'dlambulance2': 'https://digitiallatvia.com/cdn/shop/files/ems-pack-v2-5-vehicles-469678.jpg?v=1715292151&fatality=ambulance2',
+    'dlambuance3': 'https://i.etsystatic.com/31572011/r/il/a9f827/5000406406/il_fullxfull.5000406406_8axe.jpg?fatality=ambulance3'
+  };
 
   function codeFromCard(img) {
     const card = img.closest('.vehicle-card');
@@ -48,8 +53,9 @@
     document.querySelectorAll('.vehicle-card img.vehicle-img').forEach(img => {
       const code = codeFromCard(img);
       const src = MORE[code];
-      if (!code || !src || img.dataset.fatalityExpanded === '1') return;
-      img.dataset.fatalityExpanded = '1';
+      if (!code || !src) return;
+      if (img.dataset.fatalityExpandedSrc === src) return;
+      img.dataset.fatalityExpandedSrc = src;
       img.src = src;
     });
   }
