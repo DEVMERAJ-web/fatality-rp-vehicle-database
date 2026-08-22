@@ -7,10 +7,9 @@
   <title>Fatality Roleplay 2.0 - Vehicle Database</title>
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/unknown-vehicle.css">
+  <link rel="stylesheet" href="./css/vehicle-editor.css">
   <style>
-    .subscribe-gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);padding:20px}.subscribe-box{width:min(440px,100%);background:#16181C;border:1px solid #00C2FF;border-radius:12px;padding:30px;text-align:center;box-shadow:0 0 35px rgba(0,194,255,.25)}.subscribe-box h2{margin:0 0 10px;color:#fff}.subscribe-box p{margin:0 0 22px;color:#94A3B8;line-height:1.6}.subscribe-btn{width:100%;border:0;border-radius:7px;padding:13px 18px;background:#00C2FF;color:#000;font-weight:800;cursor:pointer;transition:.2s}.subscribe-btn:hover{box-shadow:0 0 18px rgba(0,194,255,.45);transform:translateY(-1px)}.made-by{position:fixed;right:14px;bottom:10px;z-index:9998;font-size:11px;letter-spacing:1px;color:#00C2FF;opacity:.65;pointer-events:none}
-    .content-area #unknown-vehicles-panel[hidden]{display:none!important}
-    .identification-filter-help{display:block;margin-top:4px;color:#64748b;font-size:.68rem;line-height:1.35}
+    .subscribe-gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);padding:20px}.subscribe-box{width:min(440px,100%);background:#16181C;border:1px solid #00C2FF;border-radius:12px;padding:30px;text-align:center;box-shadow:0 0 35px rgba(0,194,255,.25)}.subscribe-box h2{margin:0 0 10px;color:#fff}.subscribe-box p{margin:0 0 22px;color:#94A3B8;line-height:1.6}.subscribe-btn{width:100%;border:0;border-radius:7px;padding:13px 18px;background:#00C2FF;color:#000;font-weight:800;cursor:pointer;transition:.2s}.subscribe-btn:hover{box-shadow:0 0 18px rgba(0,194,255,.45);transform:translateY(-1px)}.made-by{position:fixed;right:14px;bottom:10px;z-index:9998;font-size:11px;letter-spacing:1px;color:#00C2FF;opacity:.65;pointer-events:none}.content-area #unknown-vehicles-panel[hidden]{display:none!important}.identification-filter-help{display:block;margin-top:4px;color:#64748b;font-size:.68rem;line-height:1.35}
   </style>
 </head>
 <body>
@@ -34,41 +33,22 @@
 
   <main class="main-layout">
     <aside class="filter-panel" aria-label="Vehicle Filters">
-      <div class="filter-header">
-        <h2>Filters</h2>
-        <button id="reset-filters-btn" class="btn-secondary" title="Reset all active filters">Reset All</button>
-      </div>
-      <div class="filter-group">
-        <label for="search-input">Search Database</label>
-        <input type="text" id="search-input" placeholder="Search by code, name, brand, etc..." autocomplete="off">
-      </div>
-      <div class="filter-group">
-        <label for="access-filter">Access Level</label>
-        <select id="access-filter"><option value="ALL">ALL</option><option value="CIVILIAN">CIVILIAN</option><option value="EMS">EMS</option><option value="POLICE">POLICE</option><option value="GOVERNMENT">GOVERNMENT</option><option value="ADMIN">ADMIN</option></select>
-      </div>
-      <div class="filter-group">
-        <label for="type-filter">Vehicle Type</label>
-        <select id="type-filter"><option value="ALL">All Types</option><option value="Car">🚗 Car</option><option value="Motorcycle">🏍️ Motorcycle</option><option value="Boat">🛥️ Boat</option><option value="Helicopter">🚁 Helicopter</option><option value="Plane">✈️ Plane</option><option value="Utility">🚚 Utility</option></select>
-      </div>
+      <div class="filter-header"><h2>Filters</h2><button id="reset-filters-btn" class="btn-secondary" title="Reset all active filters">Reset All</button></div>
+      <div class="filter-group"><label for="search-input">Search Database</label><input type="text" id="search-input" placeholder="Search by code, name, brand, etc..." autocomplete="off"></div>
+      <div class="filter-group"><label for="access-filter">Access Level</label><select id="access-filter"><option value="ALL">ALL</option><option value="CIVILIAN">CIVILIAN</option><option value="EMS">EMS</option><option value="POLICE">POLICE</option><option value="GOVERNMENT">GOVERNMENT</option><option value="ADMIN">ADMIN</option></select></div>
+      <div class="filter-group"><label for="type-filter">Vehicle Type</label><select id="type-filter"><option value="ALL">All Types</option><option value="Car">🚗 Car</option><option value="Motorcycle">🏍️ Motorcycle</option><option value="Boat">🛥️ Boat</option><option value="Helicopter">🚁 Helicopter</option><option value="Plane">✈️ Plane</option><option value="Utility">🚚 Utility</option></select></div>
       <div class="filter-group"><label for="subtype-filter">Subtype</label><select id="subtype-filter"><option value="ALL">All Subtypes</option></select></div>
       <div class="filter-group"><label for="category-filter">Category</label><select id="category-filter"><option value="ALL">All Categories</option></select></div>
       <div class="filter-group"><label for="department-filter">Department</label><select id="department-filter"><option value="ALL">All Departments</option></select></div>
       <div class="filter-group"><label for="status-filter">Status</label><select id="status-filter"><option value="ALL">All Statuses</option></select></div>
       <div class="filter-group"><label for="speed-filter">Max Speed</label><select id="speed-filter"><option value="ALL">🏁 All Speeds</option></select></div>
-      <div class="filter-group"><label for="identification-filter">Identification</label><select id="identification-filter"><option value="NORMAL">✅ Normal Catalogue</option><option value="PENDING">🔎 Show Identification Pending</option></select><small class="identification-filter-help">Pending vehicles stay hidden until this is enabled.</small></div>
+      <div class="filter-group"><label for="identification-filter">Identification</label><select id="identification-filter"><option value="NORMAL">✅ Normal Catalogue</option><option value="PENDING">🔎 Show Identification Pending</option></select><small class="identification-filter-help">Pending vehicles stay hidden until you enable this.</small></div>
       <div class="filter-group checkbox-group"><label for="favorites-toggle" class="checkbox-label"><input type="checkbox" id="favorites-toggle"> Show Favorites Only</label></div>
     </aside>
 
     <section class="content-area">
       <section id="unknown-vehicles-panel" class="unknown-panel" hidden aria-hidden="true" aria-labelledby="unknown-title">
-        <div class="unknown-panel-head">
-          <div>
-            <div class="unknown-kicker">🔎 COMMUNITY IDENTIFICATION</div>
-            <h2 id="unknown-title">Unidentified Vehicles</h2>
-            <p>Copy the spawn code, spawn the vehicle in Fatality RP 2.0, identify what you see, enter the vehicle details and max speed, then drag and drop a screenshot.</p>
-          </div>
-          <div class="unknown-counter"><strong id="unknown-count">0</strong><span>need review</span></div>
-        </div>
+        <div class="unknown-panel-head"><div><div class="unknown-kicker">🔎 COMMUNITY IDENTIFICATION</div><h2 id="unknown-title">Unidentified Vehicles</h2><p>Copy the spawn code, spawn the vehicle in Fatality RP 2.0, identify what you see, enter the vehicle details and max speed, then drag and drop a screenshot.</p></div><div class="unknown-counter"><strong id="unknown-count">0</strong><span>need review</span></div></div>
         <div id="unknown-vehicle-list" class="unknown-vehicle-list"></div>
         <div id="unknown-empty" class="unknown-empty" hidden>🎉 No unidentified vehicles are currently listed.</div>
       </section>
@@ -78,10 +58,7 @@
     </section>
   </main>
 
-  <div id="vehicle-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
-    <div class="modal-card"><button id="modal-close" class="modal-close-btn" aria-label="Close Modal">&times;</button><div id="modal-body"></div></div>
-  </div>
-
+  <div id="vehicle-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="modal-title"><div class="modal-card"><button id="modal-close" class="modal-close-btn" aria-label="Close Modal">&times;</button><div id="modal-body"></div></div></div>
   <footer class="footer"><p>Fatality Roleplay 2.0 &copy; Vehicle Database | <span class="accent-text">MADE BY MERAJ</span></p></footer>
   <div class="made-by">MADE BY MERAJ</div>
 
@@ -92,8 +69,6 @@
   <script src="./js/unknown-vehicle.js"></script>
   <script src="./js/vehicle-speed.js"></script>
   <script src="./js/identification-filter.js"></script>
-  <script>
-    document.getElementById('subscribe-btn').addEventListener('click',function(){window.open('https://www.youtube.com/@op_meraj_ff?sub_confirmation=1','_blank','noopener,noreferrer');document.getElementById('subscribe-gate').style.display='none';});
-  </script>
+  <script>document.getElementById('subscribe-btn').addEventListener('click',function(){window.open('https://www.youtube.com/@op_meraj_ff?sub_confirmation=1','_blank','noopener,noreferrer');document.getElementById('subscribe-gate').style.display='none';});</script>
 </body>
 </html>
