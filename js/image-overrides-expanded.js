@@ -30,8 +30,15 @@
     'DLM5EMS': 'https://fivemgg.nyc3.digitaloceanspaces.com/fivem/2024/05/10084149/BMW-M5-Emergency-Services-FiveM-3.webp',
     'DLM7EMS': 'https://digitiallatvia.com/cdn/shop/files/3_98cd40f6-80e3-448b-b2a8-a0845ae46a38.jpg?v=1704638953&width=2048',
     'M7EMS': 'https://digitiallatvia.com/cdn/shop/files/3_98cd40f6-80e3-448b-b2a8-a0845ae46a38.jpg?v=1704638953&width=2048',
-    'DLRS6EMS': 'https://dunb17ur4ymx4.cloudfront.net/packages/images/c52ef023eacb2bf8ad027d17501698e0f3fac553.png',
-    'DLRS7EMS': 'https://static.wixstatic.com/media/433ec0_d8e54d3364654f52a33392b77c6eebe8~mv2.png/v1/fill/w_980%2Ch_495%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/433ec0_d8e54d3364654f52a33392b77c6eebe8~mv2.png',
+
+    /* Dedicated FiveM EMS Audi references */
+    'DLRS6EMS': 'https://img.gta5-mods.com/q95/images/danish-paramedicin-audi-rs6-paintjob-els-add-on-fivem/31d370-3.PNG',
+    'RS6EMS': 'https://img.gta5-mods.com/q95/images/danish-paramedicin-audi-rs6-paintjob-els-add-on-fivem/31d370-3.PNG',
+    'DLRS7EMS': 'https://lunardev.co.uk/cdn/shop/files/Desktop_Screenshot_2023.04.23_-_12.40.24.61_a72c3d27-510e-4ee2-8f3f-6b43512b5124.png?v=1690562448&width=1445',
+    'RS7EMS': 'https://lunardev.co.uk/cdn/shop/files/Desktop_Screenshot_2023.04.23_-_12.40.24.61_a72c3d27-510e-4ee2-8f3f-6b43512b5124.png?v=1690562448&width=1445',
+    'DLAudiRS6EMS': 'https://img.gta5-mods.com/q95/images/danish-paramedicin-audi-rs6-paintjob-els-add-on-fivem/31d370-3.PNG',
+    'DLAudiRS7EMS': 'https://lunardev.co.uk/cdn/shop/files/Desktop_Screenshot_2023.04.23_-_12.40.24.61_a72c3d27-510e-4ee2-8f3f-6b43512b5124.png?v=1690562448&width=1445',
+
     'DLRSQ8EMS': 'https://fivemdealership.net/cdn/shop/files/GTA5_2024-03-17_06-32-16.png?v=1711560941&width=1100',
     'DLX5EMS': 'https://img.gta5-mods.com/q75/images/bmw-x5-ambulance-rapid-response-vehicle-skin/788d8b-1.png',
     'DLRAMEMS': 'https://othrin.com/cdn/shop/files/Screenshot_27.png?v=1748310788&width=1646',
