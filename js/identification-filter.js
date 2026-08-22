@@ -6,6 +6,7 @@
   let mode = 'NORMAL';
   let observer = null;
   let scheduled = false;
+  let sorting = false;
 
   const isUnknown = (card) => {
     const status = (card.querySelector('.badge-status')?.textContent || '').trim().toLowerCase();
@@ -49,6 +50,43 @@
     panel.style.display = pending ? '' : 'none';
   }
 
+  function sortPendingFirst(cards) {
+    return [...cards].sort((a, b) => {
+      const au = isUnknown(a) ? 1 : 0;
+      const bu = isUnknown(b) ? 1 : 0;
+      if (au !== bu) return bu - au; // unidentified first
+      return 0; // preserve app's existing order within each group
+    });
+  }
+
+  function sortNormalFirst(cards) {
+    return [...cards].sort((a, b) => {
+      const score = card => {
+        const status = (card.querySelector('.badge-status')?.textContent || '').toLowerCase();
+        if (status.includes('confirmed')) return 3;
+        if (status.includes('likely')) return 2;
+        if (status.includes('unknown') || status.includes('unverified') || isUnknown(card)) return 0;
+        return 1;
+      };
+      return score(b) - score(a);
+    });
+  }
+
+  function reorderCards(cards, grid) {
+    if (sorting || cards.length < 2) return;
+    const ordered = mode === 'PENDING' ? sortPendingFirst(cards) : sortNormalFirst(cards);
+    const alreadyOrdered = ordered.every((card, i) => card === cards[i]);
+    if (alreadyOrdered) return;
+
+    sorting = true;
+    if (observer) observer.disconnect();
+    const fragment = document.createDocumentFragment();
+    ordered.forEach(card => fragment.appendChild(card));
+    grid.appendChild(fragment);
+    if (observer) observer.observe(grid, { childList: true });
+    sorting = false;
+  }
+
   function applyNow() {
     scheduled = false;
     togglePendingPanel();
@@ -56,11 +94,16 @@
     const grid = document.getElementById('vehicle-grid');
     if (!grid) return;
 
-    grid.querySelectorAll('.vehicle-card').forEach(card => {
+    const cards = [...grid.querySelectorAll('.vehicle-card')];
+    cards.forEach(card => {
       const unknown = isUnknown(card);
+      // Normal catalogue hides unidentified vehicles.
+      // Pending mode shows all current filter results, but puts unidentified vehicles first.
       card.style.display = mode === 'NORMAL' && unknown ? 'none' : '';
       card.dataset.identificationPending = unknown ? 'true' : 'false';
     });
+
+    reorderCards(cards, grid);
   }
 
   function scheduleApply() {
@@ -75,7 +118,9 @@
 
     const grid = document.getElementById('vehicle-grid');
     if (grid && !observer) {
-      observer = new MutationObserver(() => scheduleApply());
+      observer = new MutationObserver(() => {
+        if (!sorting) scheduleApply();
+      });
       observer.observe(grid, { childList: true });
     }
   }
