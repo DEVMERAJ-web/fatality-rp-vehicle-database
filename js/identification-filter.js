@@ -6,15 +6,54 @@
   let mode = 'NORMAL';
   let observer = null;
   let scheduled = false;
-  let sorting = false;
+
+  const text = (el, selector) => (el.querySelector(selector)?.textContent || '').trim();
+  const clean = value => String(value ?? '').trim().toLowerCase();
 
   const isUnknown = (card) => {
-    const status = (card.querySelector('.badge-status')?.textContent || '').trim().toLowerCase();
-    const title = (card.querySelector('.vehicle-title')?.textContent || '').trim().toLowerCase();
+    const status = clean(text(card, '.badge-status'));
+    const title = clean(text(card, '.vehicle-title'));
     const brandText = [...card.querySelectorAll('.details-grid p')]
       .find(p => /brand:/i.test(p.textContent))?.textContent.toLowerCase() || '';
     return status === 'unknown' || status === 'unverified' || title.includes('identification pending') || brandText.includes('custom');
   };
+
+  // Lower score = less information = higher priority in Identification mode.
+  function identificationScore(card) {
+    const title = clean(text(card, '.vehicle-title'));
+    const spawn = clean(text(card, '.spawn-code-text'));
+    const details = [...card.querySelectorAll('.details-grid p')].map(p => p.textContent.trim());
+    const valueAfter = label => {
+      const row = details.find(x => new RegExp(label, 'i').test(x));
+      if (!row) return '';
+      return row.replace(new RegExp(`^.*?${label}\\s*:?\\s*`, 'i'), '').trim();
+    };
+
+    const brand = clean(valueAfter('brand'));
+    const year = clean(valueAfter('year'));
+    const type = clean(valueAfter('type'));
+    const subtype = clean(valueAfter('subtype'));
+    const dept = clean(valueAfter('dept'));
+    const category = clean(valueAfter('category'));
+    const speed = clean(card.querySelector('.speed-value')?.textContent || '');
+
+    let score = 0;
+
+    // Every vehicle has a spawn code, so it is intentionally not counted.
+    // A pending/unknown name gives no identification credit.
+    if (title && !title.includes('identification pending') && title !== 'unknown vehicle') score += 3;
+    if (brand && brand !== 'custom' && !brand.includes('identification pending') && brand !== 'unknown') score += 2;
+    if (year && year !== '—' && year !== '-' && year !== 'unknown') score += 1;
+    if (type && !['vehicle','utility'].includes(type)) score += 1;
+    if (subtype && !subtype.includes('special / custom') && !subtype.includes('identification pending')) score += 1;
+    if (dept && !['civilian','unknown'].includes(dept)) score += 1;
+    if (category && !['unknown','unclassified'].includes(category)) score += 1;
+    if (speed && !speed.includes('not verified') && !speed.includes('unknown')) score += 2;
+    if (card.querySelector('.vehicle-img')?.getAttribute('src') && !card.querySelector('.vehicle-img')?.getAttribute('src').startsWith('data:image')) score += 1;
+
+    // Stable tie-breaker by spawn code.
+    return { score, code: spawn };
+  }
 
   function ensureFilter() {
     const panel = document.querySelector('.filter-panel');
@@ -28,7 +67,7 @@
         <option value="NORMAL">✅ Normal Catalogue</option>
         <option value="PENDING">🔎 Show Identification Pending</option>
       </select>
-      <small class="identification-filter-help">Pending vehicles stay hidden until you enable this.</small>`;
+      <small class="identification-filter-help">Pending mode starts with the least-identified vehicles.</small>`;
 
     const speedGroup = document.getElementById('speed-filter')?.closest('.filter-group');
     if (speedGroup) panel.insertBefore(group, speedGroup);
@@ -50,43 +89,6 @@
     panel.style.display = pending ? '' : 'none';
   }
 
-  function sortPendingFirst(cards) {
-    return [...cards].sort((a, b) => {
-      const au = isUnknown(a) ? 1 : 0;
-      const bu = isUnknown(b) ? 1 : 0;
-      if (au !== bu) return bu - au; // unidentified first
-      return 0; // preserve app's existing order within each group
-    });
-  }
-
-  function sortNormalFirst(cards) {
-    return [...cards].sort((a, b) => {
-      const score = card => {
-        const status = (card.querySelector('.badge-status')?.textContent || '').toLowerCase();
-        if (status.includes('confirmed')) return 3;
-        if (status.includes('likely')) return 2;
-        if (status.includes('unknown') || status.includes('unverified') || isUnknown(card)) return 0;
-        return 1;
-      };
-      return score(b) - score(a);
-    });
-  }
-
-  function reorderCards(cards, grid) {
-    if (sorting || cards.length < 2) return;
-    const ordered = mode === 'PENDING' ? sortPendingFirst(cards) : sortNormalFirst(cards);
-    const alreadyOrdered = ordered.every((card, i) => card === cards[i]);
-    if (alreadyOrdered) return;
-
-    sorting = true;
-    if (observer) observer.disconnect();
-    const fragment = document.createDocumentFragment();
-    ordered.forEach(card => fragment.appendChild(card));
-    grid.appendChild(fragment);
-    if (observer) observer.observe(grid, { childList: true });
-    sorting = false;
-  }
-
   function applyNow() {
     scheduled = false;
     togglePendingPanel();
@@ -97,13 +99,18 @@
     const cards = [...grid.querySelectorAll('.vehicle-card')];
     cards.forEach(card => {
       const unknown = isUnknown(card);
-      // Normal catalogue hides unidentified vehicles.
-      // Pending mode shows all current filter results, but puts unidentified vehicles first.
       card.style.display = mode === 'NORMAL' && unknown ? 'none' : '';
       card.dataset.identificationPending = unknown ? 'true' : 'false';
     });
 
-    reorderCards(cards, grid);
+    if (mode === 'PENDING') {
+      const ordered = cards
+        .map((card, index) => ({ card, index, info: identificationScore(card) }))
+        .sort((a, b) => a.info.score - b.info.score || a.info.code.localeCompare(b.info.code) || a.index - b.index);
+      const fragment = document.createDocumentFragment();
+      ordered.forEach(item => fragment.appendChild(item.card));
+      grid.appendChild(fragment);
+    }
   }
 
   function scheduleApply() {
@@ -118,9 +125,7 @@
 
     const grid = document.getElementById('vehicle-grid');
     if (grid && !observer) {
-      observer = new MutationObserver(() => {
-        if (!sorting) scheduleApply();
-      });
+      observer = new MutationObserver(() => scheduleApply());
       observer.observe(grid, { childList: true });
     }
   }
