@@ -41,6 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
       speedFilter = e.target.value;
       applySpeedFilter();
     });
+    document.getElementById('reset-filters-btn')?.addEventListener('click', () => {
+      speedFilter = 'ALL';
+      const select = document.getElementById('speed-filter');
+      if (select) select.value = 'ALL';
+      setTimeout(applySpeedFilter, 0);
+    });
   }
 
   function decorateCards() {
