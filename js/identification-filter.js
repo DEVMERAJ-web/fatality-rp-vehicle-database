@@ -5,21 +5,14 @@
   const FILTER_ID = 'identification-filter';
   let mode = 'NORMAL';
   let observer = null;
-  let raf = 0;
+  let scheduled = false;
 
   const isUnknown = (card) => {
     const status = (card.querySelector('.badge-status')?.textContent || '').trim().toLowerCase();
     const title = (card.querySelector('.vehicle-title')?.textContent || '').trim().toLowerCase();
-    const brandText = [...card.querySelectorAll('.details-grid p')].find(p => /brand:/i.test(p.textContent))?.textContent.toLowerCase() || '';
+    const brandText = [...card.querySelectorAll('.details-grid p')]
+      .find(p => /brand:/i.test(p.textContent))?.textContent.toLowerCase() || '';
     return status === 'unknown' || status === 'unverified' || title.includes('identification pending') || brandText.includes('custom');
-  };
-
-  const score = (card) => {
-    const status = (card.querySelector('.badge-status')?.textContent || '').toLowerCase();
-    if (status.includes('confirmed')) return 3;
-    if (status.includes('likely')) return 2;
-    if (status.includes('unknown') || status.includes('unverified')) return 0;
-    return 1;
   };
 
   function ensureFilter() {
@@ -43,7 +36,7 @@
     document.getElementById(FILTER_ID).addEventListener('change', (e) => {
       mode = e.target.value === 'PENDING' ? 'PENDING' : 'NORMAL';
       window.dispatchEvent(new CustomEvent('fatality:identification-mode', { detail: { mode } }));
-      apply();
+      scheduleApply();
     });
   }
 
@@ -56,37 +49,33 @@
     panel.style.display = pending ? '' : 'none';
   }
 
-  function apply() {
+  function applyNow() {
+    scheduled = false;
     togglePendingPanel();
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => {
-      const grid = document.getElementById('vehicle-grid');
-      if (!grid) return;
-      const cards = [...grid.querySelectorAll('.vehicle-card')];
-      cards.forEach(card => {
-        const unknown = isUnknown(card);
-        // Normal mode: clean catalogue only. Pending mode: show ALL catalogue cards as-is;
-        // the dedicated Unidentified Vehicles panel above contains the pending queue.
-        card.style.display = mode === 'NORMAL' && unknown ? 'none' : '';
-        card.dataset.identificationPending = unknown ? 'true' : 'false';
-      });
 
-      if (mode === 'NORMAL') {
-        cards.sort((a, b) => score(b) - score(a));
-        const fragment = document.createDocumentFragment();
-        cards.forEach(card => fragment.appendChild(card));
-        grid.appendChild(fragment);
-      }
+    const grid = document.getElementById('vehicle-grid');
+    if (!grid) return;
+
+    grid.querySelectorAll('.vehicle-card').forEach(card => {
+      const unknown = isUnknown(card);
+      card.style.display = mode === 'NORMAL' && unknown ? 'none' : '';
+      card.dataset.identificationPending = unknown ? 'true' : 'false';
     });
+  }
+
+  function scheduleApply() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(applyNow);
   }
 
   function install() {
     ensureFilter();
-    togglePendingPanel();
-    apply();
+    applyNow();
+
     const grid = document.getElementById('vehicle-grid');
     if (grid && !observer) {
-      observer = new MutationObserver(() => apply());
+      observer = new MutationObserver(() => scheduleApply());
       observer.observe(grid, { childList: true });
     }
   }
